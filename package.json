@@ -1,0 +1,18 @@
+{
+  "name": "devour",
+  "version": "1.0.0",
+  "description": "Eat together. Your way.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "devour",
+    "food",
+    "social",
+    "recipes",
+    "restaurants"
+  ],
+  "author": "Danny Lee, Mackenzie Pletcher, Meera Limaye, Sim Singh",
+  "license": "ISC"
+}
