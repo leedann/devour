@@ -1,1 +1,38 @@
-/* add your own style rules here */
+.loginCard {
+    width: 325px;
+    height: 300px;
+}
+.lrContainer {
+    max-width: 325px;
+}
+.startPage {
+    background: linear-gradient(to top, rgba(255,255,255,.5), rgba(255,255,255,.9)), url('../../img/frontpage.jpg') center / cover;
+}
+/*.login{
+    display:flex;
+    justify-content: flex-start;
+}
+.register{
+    display:flex;
+    justify-content: flex-end;
+}*/
+
+
+.titleName {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.titleTag {
+    padding-top: 5vh;
+}
+.mainContent {
+    display: flex;
+    justify-content: center;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Helvetica Neue", Helvetica, Arial, Sans-serif;
+  font-weight: 700;
+}
