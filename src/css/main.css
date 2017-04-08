@@ -2,21 +2,16 @@
     width: 325px;
     height: 300px;
 }
+.registerCard {
+    width: 325px;
+    height: 600px;
+}
 .lrContainer {
     max-width: 325px;
 }
 .startPage {
     background: linear-gradient(to top, rgba(255,255,255,.5), rgba(255,255,255,.9)), url('../../img/frontpage.jpg') center / cover;
 }
-/*.login{
-    display:flex;
-    justify-content: flex-start;
-}
-.register{
-    display:flex;
-    justify-content: flex-end;
-}*/
-
 
 .titleName {
     display: flex;

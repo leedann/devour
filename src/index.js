@@ -4,9 +4,14 @@ import App from "./components/app.jsx";
 
 //import our stylesheet so webpack puts it into the bundle
 import "./css/main.css";
+import {Router, Route, IndexRoute, hashHistory} from "react-router";
 
 //TODO: replace the JSX here with a Router configuration
 //from the react router module (already a dependency in package.json)
-render((
-    <App/>
-    ), document.getElementById("app"));
+var router = (
+    <Router history= {hashHistory}>
+        <Route path="/" component={App}>
+        </Route>
+    </Router>
+)
+render(router, document.getElementById("app"));
