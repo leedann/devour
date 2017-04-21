@@ -31,3 +31,15 @@ h1, h2, h3, h4, h5, h6 {
   font-family: "Helvetica Neue", Helvetica, Arial, Sans-serif;
   font-weight: 700;
 }
+
+.backToLogin, .forgot {
+    font-size: 12px;
+}
+
+.center_title {
+    padding-left: 40vw;
+    font-size: 5vh;
+}
+.dietCard:hover {
+        background-color: #F5F5F5;
+}
