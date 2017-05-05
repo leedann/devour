@@ -1,0 +1,27 @@
+.menuItem {
+    text-align: center;
+}
+
+
+//all these flexes make it the way it iz
+.homePage {
+    display: flex;
+    align-content: center;
+}
+
+.homeWrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.homeCards {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.homeCards.mdl-card {
+    max-height: 100px;
+    @media (max-width: 450px) {
+        height: 2vh;
+    }
+}

@@ -1,0 +1,66 @@
+$paginateSize: 40px;
+$lightgrey: #E0E0E0;
+
+.homeButton {
+    align-self: center
+    
+}
+.homeIcon {
+    padding-left: 75px;
+}
+.headerContent {
+    border-bottom-style: solid;
+    border-color: $lightgrey;
+    border-width: 1px;
+    margin-bottom: 20px;
+}
+
+.headerico {
+    margin-left: 15px;
+}
+
+.footRight, .footLeft {
+    display: flex;
+    justify-content: center;
+    align-self: center;
+}
+.footRight {
+    margin-right: 10vw;
+}
+.footLeft {
+    margin-left: 10vw;
+}
+
+.devourFooter {
+    height: 66px;
+    position: fixed;
+    padding: 0px;
+    bottom: 0px;
+    
+}
+.devourFooter > a {
+    width: 0;
+}
+
+
+.paginate{
+    font-size: $paginateSize;
+}
+
+.homeIcon {
+    font-size: $paginateSize
+}
+.headerContent {
+    height: 100px;
+    top: 0;
+    position: absolute;
+}
+
+.layoutHeader {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.headerRow {
+    padding-left: 5vw;
+}

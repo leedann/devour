@@ -1,0 +1,73 @@
+$lightgrey: #E0E0E0;
+$hotpink: #F50057;
+$darkGrey: darken($lightgrey, 25%);
+$font-accent: 'Kaushan Script', Helvetica, 'Arial Narrow', Verdana, Sans-serif; 
+$circleText: 25px;
+$textSize: 20px;
+
+.circleText {
+    font-size: $circleText;
+    fill: $darkGrey
+}
+
+.dateTitleWrap {
+    margin: 0;
+}
+
+.gatheringWrapper {
+    margin-top: 120px;
+}
+
+.gatheringName {
+    @media (min-width: 841px) {
+        font-size: 1vw;
+    }
+}
+
+.reqAnswer {
+    margin-left: auto;
+    padding-right: 15px;
+}
+
+.reject, .accept {
+    font-size: $textSize + 10;
+}
+
+.dayIcon {
+    height: 92px;
+    width: 96px;
+}
+
+.dayCircle {
+    stroke-width: 2; 
+    fill: $lightgrey;
+}
+
+.titleChildren {
+    padding: 0;
+}
+.titleName {
+    font-family: $font-accent;
+    font-size: $textSize;
+    text-align: center;
+    align-self: flex-start;
+    width: 100vw;
+}
+
+.longCardContainer {
+    padding: 0;
+    width: 100vw;
+}
+
+.listItem {
+    padding: 0;
+}
+
+.longCardContent {
+    @media (min-width: 800px) {
+        display: flex;
+        align-content: center;
+        justify-content: flex-start;
+    }
+}
+

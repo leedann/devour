@@ -1,4 +1,5 @@
 import React from "React"
+import Friend_Cards from "./friend_tiles.jsx"
 
 export default class FriendsList extends React.Component {
     constructor(props) {
@@ -7,7 +8,9 @@ export default class FriendsList extends React.Component {
 
     render() {
         return (
+            <div className="mdl-grid mdl-layout mdl-js-layout friend_wrapper">
 
+            </div>
         );
     }
 }

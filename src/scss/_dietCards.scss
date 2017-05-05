@@ -1,0 +1,30 @@
+$hoverColor: #F5F5F5;
+
+.center_title {
+    padding-left: 40vw;
+    font-size: 5vh;
+    @media (max-width: 450px) {
+        padding-left: 25vw;
+        font-size: 6vw;
+    }
+}
+.dietName {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+.dietCard:hover {
+    background-color: $hoverColor;
+}
+.dietGrid {
+    padding-left: 5vw;
+    width: 300px;
+    @media (min-width: 840px) {
+        width: 80vw;
+    }
+}
+
+
+.surveywrapper {
+    margin-top: 90px;
+}

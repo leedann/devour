@@ -1,0 +1,32 @@
+$font-body: Roboto, 'Helvetica Neue', Helvetica, Arial, Sans-serif;
+$font-accent: 'Kaushan Script', Helvetica, 'Arial Narrow', Verdana, Sans-serif; 
+$hotpink: #F50057;
+
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-body;
+  font-weight: 700;
+}
+
+body {
+  font-family: $font-body;
+}
+.titleTag {
+  text-align: center;
+}
+
+.textSecondary {
+  font-family: $font-accent;
+}
+.textAccent {
+  color: $hotpink;
+}
+
+
+@import "login";
+@import "dietCards";
+@import "homeCards";
+@import "welcomepage";
+@import "gatheringCards";
+@import "eventCard";
+@import "layout";
