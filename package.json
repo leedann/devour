@@ -5,6 +5,7 @@
     "type": "git",
     "url": "https://github.com/leedann/devour"
   },
+  "homepage": "https://leedann.github.io/devour",
   "description": "Eat Together. Your Way.",
   "main": "index.js",
   "scripts": {
@@ -12,7 +13,8 @@
     "start": "node server.js",
     "lint": "eslint src",
     "build": "webpack -p --config production.webpack.config.js",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "deploy": "gh-pages -d dist"
   },
   "author": "Danny Lee, Mackenzie Pletcher, Meera Limaye, Sim Singh",
   "license": "ISC",

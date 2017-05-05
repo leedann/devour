@@ -8,6 +8,8 @@ import Survey from "./survey.jsx";
 import CreateEvent from "./createEvent.jsx";
 import GatheringRequests from "./gatheringRequests.jsx";
 import SurveyEnd from "./surveyConf.jsx";
+import SurveyGoals from "./surveyGoals.jsx";
+import SurveyAllergies from "./surveyAllergies.jsx";
 import { createBrowserHistory } from "history";
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 const HomePage = () => <Home />
@@ -23,6 +25,8 @@ const App = () => (
       <Route path="/create" component={CreateEvent} />
       <Route path="/info" component={GatheringRequests} />
       <Route path="/surveyend" component={SurveyEnd} />
+      <Route path="/selectGoals" component={SurveyGoals} />
+      <Route path="/allergyinfo" component={SurveyAllergies} />
     </Switch>
   </Router>
 );
