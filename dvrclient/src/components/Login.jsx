@@ -23,6 +23,10 @@ export default class LoginRegister extends React.Component {
             "Email": email,
             "Password": password
         }
+        //this is where you make the api call
+        if (userinfo) {
+
+        }
         history.push('/home')
     }
 

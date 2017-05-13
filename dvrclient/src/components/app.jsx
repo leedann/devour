@@ -11,6 +11,7 @@ import SurveyEnd from "./surveyConf.jsx";
 import SurveyGoals from "./surveyGoals.jsx";
 import SurveyAllergies from "./surveyAllergies.jsx";
 import GatheringPage from "./gatheringEvent.jsx";
+import RecipePage from "./recipes.jsx";
 import { createBrowserHistory } from "history";
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 const HomePage = () => <Home />
@@ -29,6 +30,7 @@ const App = () => (
       <Route path="/selectGoals" component={SurveyGoals} />
       <Route path="/allergyinfo" component={SurveyAllergies} />
       <Route path="/social/event" component={GatheringPage} />
+      <Route path="/recipes" component={RecipePage} />
     </Switch>
   </Router>
 );

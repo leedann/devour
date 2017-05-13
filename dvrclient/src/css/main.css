@@ -2,8 +2,15 @@ h1, h2, h3, h4, h5, h6 {
   font-family: Roboto, "Helvetica Neue", Helvetica, Arial, Sans-serif;
   font-weight: 700; }
 
+html, body {
+  min-height: 100%; }
+
 body {
-  font-family: Roboto, "Helvetica Neue", Helvetica, Arial, Sans-serif; }
+  font-family: Roboto, "Helvetica Neue", Helvetica, Arial, Sans-serif;
+  background-color: #fffbf0; }
+
+ul {
+  list-style-type: none; }
 
 .titleTag {
   text-align: center; }
@@ -13,6 +20,27 @@ body {
 
 .textAccent {
   color: #F50057; }
+
+.backWash {
+  background-color: #FFECB3; }
+
+.usrPhoto {
+  height: 100px;
+  width: 100px;
+  border-radius: 50px;
+  margin-bottom: 10px; }
+
+.smallUsrPhoto {
+  border-radius: 50px;
+  height: 65px;
+  width: 65px;
+  margin-right: 1.5vw; }
+
+li {
+  background-color: #FFFFFF; }
+
+.phantom {
+  display: block; }
 
 .loginCard {
   width: 325px;
@@ -26,7 +54,7 @@ body {
   max-width: 325px; }
 
 .startPage {
-  background: linear-gradient(to top, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.9)), url("../../img/frontpage.jpg") center/cover; }
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.9)), url("/img/frontpage.jpg") center/cover; }
 
 .titleName {
   display: flex;
@@ -60,7 +88,6 @@ body {
   background-color: #F5F5F5; }
 
 .dietGrid {
-  padding-left: 5vw;
   width: 300px; }
   @media (min-width: 840px) {
     .dietGrid {
@@ -72,23 +99,24 @@ body {
 .menuItem {
   text-align: center; }
 
-.homePage {
-  display: flex;
-  align-content: center; }
+.homeIco {
+  height: 100px;
+  width: 100px; }
 
 .homeWrapper {
   display: flex;
   justify-content: center; }
 
-.homeCards {
+.homeCards > .mdl-card__title {
   display: flex;
-  justify-content: flex-end; }
+  justify-content: center; }
 
 .homeCards.mdl-card {
+  width: 250px;
   max-height: 100px; }
   @media (max-width: 450px) {
     .homeCards.mdl-card {
-      height: 2vh; } }
+      height: 100px; } }
 
 .welcomePage {
   display: flex;
@@ -115,13 +143,24 @@ body {
 
 .circleText {
   font-size: 25px;
-  fill: #a0a0a0; }
+  fill: #474747; }
 
 .dateTitleWrap {
   margin: 0; }
 
+.eventsRedir {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 20px; }
+
+.eventsRedirButton {
+  padding-right: 5px; }
+
+.eventLink {
+  text-decoration: none; }
+
 .gatheringWrapper {
-  margin-top: 120px; }
+  margin-top: 100px; }
 
 @media (min-width: 841px) {
   .gatheringName {
@@ -159,6 +198,9 @@ body {
 .listItem {
   padding: 0; }
 
+.listItem:hover {
+  cursor: pointer; }
+
 @media (min-width: 800px) {
   .longCardContent {
     display: flex;
@@ -175,19 +217,45 @@ body {
   margin: 0px;
   padding: 20px; }
 
+.eventTitleCircle {
+  margin-bottom: 10px; }
+
+.evtCircleText {
+  font-size: 2em;
+  fill: #474747; }
+
 .eventWrapper {
-  margin-top: 120px; }
+  display: flex;
+  justify-content: center; }
 
 .eventCard {
   margin-top: 40px;
   padding: 0;
-  width: 90vw; }
+  width: 91vw;
+  background-color: #FFFFFF; }
+
+.evtCardName {
+  color: #949494;
+  font-size: 1.5em; }
+
+.eventTitleCard {
+  max-height: 10vh;
+  max-width: 44.5vw;
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+
+.recommendRecipes {
+  max-width: 91vw; }
+
+.eventWideTitleCard {
+  max-width: 91vw; }
 
 .homeButton {
   align-self: center; }
 
-.homeIcon {
-  padding-left: 75px; }
+.pageContent {
+  margin-bottom: 15vh; }
 
 .headerContent {
   border-bottom-style: solid;
@@ -203,20 +271,27 @@ body {
   justify-content: center;
   align-self: center; }
 
-.footRight {
-  margin-right: 10vw; }
-
-.footLeft {
-  margin-left: 10vw; }
-
 .devourFooter {
   height: 66px;
-  position: fixed;
   padding: 0px;
-  bottom: 0px; }
+  width: 100vw;
+  justify-content: space-around; }
+  @media (max-width: 450px) {
+    .devourFooter {
+      padding-right: 20px; } }
 
 .devourFooter > a {
   width: 0; }
+
+.pageWrap {
+  min-height: 100%;
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  flex-shrink: 0; }
+
+.headerTitle {
+  margin-left: 6vw; }
 
 .paginate {
   font-size: 40px; }
@@ -224,16 +299,61 @@ body {
 .homeIcon {
   font-size: 40px; }
 
-.headerContent {
-  height: 100px;
-  top: 0;
-  position: absolute; }
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 30px;
+  padding-right: 30px; }
 
 .layoutHeader {
   display: flex;
-  justify-content: flex-start; }
+  margin-bottom: 20px; }
 
-.headerRow {
-  padding-left: 5vw; }
+.recipeWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 350px; }
+  @media (min-width: 841px) {
+    .recipeWrapper {
+      height: 300px;
+      max-width: 35vw; } }
+
+.recipeCard {
+  height: 300px;
+  margin-bottom: 25px; }
+  @media (min-width: 841px) {
+    .recipeCard {
+      height: 300px; } }
+
+.imageContainer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end; }
+
+.recipeName {
+  font-size: 1.25em;
+  fill: #474747; }
+
+.favButton {
+  align-self: flex-start;
+  margin-bottom: 0;
+  margin-right: 0; }
+
+.recipeActions {
+  display: flex; }
+
+.recipeActions:hover {
+  cursor: pointer; }
+
+.recipeActions > i {
+  margin-left: 8px;
+  padding-bottom: 30px; }
+
+.recipeTime {
+  font-size: 12px; }
+
+.recipeInfo {
+  overflow-y: scroll; }
 
 /*# sourceMappingURL=main.css.map */

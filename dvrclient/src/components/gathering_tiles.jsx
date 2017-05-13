@@ -1,7 +1,9 @@
 import React from "react";
-import moment from "moment"
+import moment from "moment";
+import {history} from './app.jsx'
 
-export class LongCards extends React.Component {
+//the long tiles
+class LongCards extends React.Component {
     constructor(props) {
         super(props)
         this.state={
@@ -10,51 +12,22 @@ export class LongCards extends React.Component {
             name: this.props.evt.Name,
             request: this.props.request? this.props.request : false
         }
+        this.handleEvntClick = this.handleEvntClick.bind(this)
     }
 
-    //will need to rerender page to show updated
-    handleRequestClick(event) {
-        var target = event.currentTarget;
-        var buttonClass = target.className.split(" ");
-        var snackbarContainer = document.querySelector('#snackConfirm');
-        var data = {
-            message: "",
-            timeout: 3000,
-            actionText: 'Undo'
-        };
-        switch (buttonClass[0]) {
-            case "accept":
-                if (target.style.color == "#4CAF50") {
-                }else {
-                    target.style.color = "#4CAF50";
-                    console.log(snackbarContainer.MaterialSnackbar)
-                    data.message = "Event accepted!"
-                    snackbarContainer.MaterialSnackbar.showSnackbar(data);
-                }
-                break;
-            case "reject":
-                if (target.style.color == "#F50057") {
-
-                }else {
-                    target.style.color = "#F50057";
-                    data.message = "Event declined."
-                    snackbarContainer.MaterialSnackbar.showSnackbar(data);
-                }
-                break;
+    handleEvntClick(evt) {
+        //state in push goes to this.location.state
+        if (evt.target.tagName !== 'I') {
+            history.push("/social/event")
         }
-
-    }
-
-    handleEvntClick(event) {
-
     }
 
     //checks to see if the longcards are of the request variety
     requestCheck() {
-        var doubleNum = this.state.day > 10
+        var doubleNum = this.state.day >= 10
         if (this.state.request) {
             return (
-                <li className="listItem mdl-list__item mdl-list mdl-cell mdl-cell--4-col mdl-cell--8-col-phone mdl-cell--8-col-tablet mdl-shadow--2dp">
+                <li onClick={evt => this.handleEvntClick(evt)} className="listItem mdl-list__item mdl-list mdl-cell mdl-cell--4-col mdl-cell--8-col-phone mdl-cell--8-col-tablet mdl-shadow--2dp">
                     <span className="longCardContent mdl-list__item-primary-content">
                         <div className="dateTitleWrap">
                             <svg className="dayIcon">
@@ -65,10 +38,7 @@ export class LongCards extends React.Component {
                                 {this.state.name}
                             </span>
                         </div>
-                        <span className="reqAnswer mdl-list__item-secondary-action">
-                            <i className="reject material-icons" onClick={event => this.handleRequestClick(event)}>clear</i>
-                            <i className="accept material-icons" onClick={event => this.handleRequestClick(event)}>done</i>
-                        </span>
+                    {this.props.children}
                     </span>
                 </li>
             );
@@ -76,11 +46,11 @@ export class LongCards extends React.Component {
             //if the user is hosting, outline it
             var stroke = this.state.hosting? "#F50057" : "";
             return (
-                <li className="listItem mdl-list__item mld-list mdl-cell mdl-cell--4-col mdl-cell--8-col-phone mdl-cell--8-col-tablet mdl-shadow--2dp">
+                <li onClick={evt => this.handleEvntClick(evt)} className="listItem mdl-list__item mld-list mdl-cell mdl-cell--4-col mdl-cell--8-col-phone mdl-cell--8-col-tablet mdl-shadow--2dp">
                     <span className="longCardContent mdl-list__item-primary-content">
                         <div className="dateTitleWrap">
                             <svg className="dayIcon">
-                                <circle cx="50" cy="50" r="23" stroke= {stroke}className="dayCircle" />
+                                <circle cx="50" cy="50" r="23" stroke={stroke}className="dayCircle" />
                                 {doubleNum? <text className="circleText" x="35" y="59">{this.state.day}</text> : <text className="circleText" x="43" y="59">{this.state.day}</text>}
                             </svg>
                             <span className="gatheringName">
@@ -99,6 +69,7 @@ export class LongCards extends React.Component {
     }
 }
 
+
 //takes an array and a title and wraps the cards in a title
 export class TitleWrap extends React.Component {
     constructor(props) {
@@ -109,17 +80,59 @@ export class TitleWrap extends React.Component {
             request: this.props.request
         }
     }
+    //will need to rerender page to show updated
+    handleRequestClick(event) {
+        var target = event.currentTarget;
+        var buttonClass = target.className.split(" ");
+        var targetID = target.parentNode.id;
+        var snackbarContainer = document.getElementById("snackBar");
+        var data = {
+            message: "",
+            timeout: 1000,
+            actionText: 'Undo'
+        };
+        switch (buttonClass[0]) {
+            case "accept":
+                    target.style.color="#4CAF50";
+                    data.message = "Event accepted!"
+                    snackbarContainer.MaterialSnackbar.showSnackbar(data);
+                break;
+            case "reject":
+                    target.style.color="#F50057";
+                    data.message ="Event declined."
+                    snackbarContainer.MaterialSnackbar.showSnackbar(data);
+                break;
+            default:
+                break;
+        }
+        //temporary remove -- will need to remove from api then 
+        var newArr = this.state.arr;
+        newArr = newArr.filter(obj => {
+            return obj.id != targetID
+        })
+        this.setState({
+            arr: newArr
+        })
+        //dont forget to do an api call when we get it up!
+    }
 
     render() {
         return (
                 <div className="titleTile">
                     <div className="titleChildren mdl-grid">
                         <span className="titleName mdl-cell--12-col mdl-cell--8-col-phone">{this.state.titleName}</span>
-                            <ul className="longCardContainer mld-list mdl-cell mdl-cell--12-col mdl-cell--8-col-phone mdl-grid">    
-                                {this.state.arr.map(evt =>
-                                    <LongCards key={evt.id} evt={evt} request={this.props.request} />
-                                )}
-                            </ul>
+                        <ul className="longCardContainer mld-list mdl-cell mdl-cell--12-col mdl-cell--8-col-phone mdl-grid">
+                            {this.state.arr.map(evt =>
+                                <LongCards key={evt.id} evt={evt} request={this.props.request}>
+                                    {this.props.request? 
+                                        <span id={evt.id} className="reqAnswer mdl-list__item-secondary-action">
+                                            <i className="reject material-icons" onClick={event => this.handleRequestClick(event)}>clear</i>
+                                            <i className="accept material-icons" onClick={event => this.handleRequestClick(event)}>done</i>
+                                        </span>
+                                    : ""}
+                                </LongCards>
+                            )}
+                        </ul>
                     </div>
                 </div>              
             );
@@ -127,6 +140,7 @@ export class TitleWrap extends React.Component {
 }
 
 
+//this is the events page list
 export default class GatheringList extends React.Component {
     constructor(props) {
         super(props)
@@ -159,7 +173,7 @@ export default class GatheringList extends React.Component {
             var month = moment(allMonths[i].StartTime).format("MMMM")
             //if month isnt in the obj
             if (!eventObj[month]) {
-                eventObj[month] = new Array();
+                eventObj[month]=[]
                 eventObj[month].push(allMonths[i]);
             }else {
                 eventObj[month].push(allMonths[i]);
@@ -177,15 +191,17 @@ export default class GatheringList extends React.Component {
     render() {
         var eventObj = this.state.events
         return (
-            <div className="mdl-layout mdl-js-layout md-grid">
+            <div className="md-grid">
                 {
                     Object.keys(this.state.events).map(function(keyName, keyIndex) {
                         if (moment(keyName, "MMMM").isValid()) {
                             return <TitleWrap key={keyName} arr={eventObj[keyName]} titleName={keyName} />
                         }
+                        return "";
                     })
                 }
             </div>
         );
     }
 }
+

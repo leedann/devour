@@ -1,12 +1,14 @@
+$washedAmber: #FFECB3;
+$lightWash: lighten($washedAmber, 10%);
+
 .menuItem {
     text-align: center;
 }
 
 
-//all these flexes make it the way it iz
-.homePage {
-    display: flex;
-    align-content: center;
+.homeIco {
+    height: 100px;
+    width: 100px;
 }
 
 .homeWrapper {
@@ -14,14 +16,15 @@
     justify-content: center;
 }
 
-.homeCards {
+.homeCards > .mdl-card__title {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
 }
 
 .homeCards.mdl-card {
+    width: 250px;
     max-height: 100px;
     @media (max-width: 450px) {
-        height: 2vh;
+        height: 100px;
     }
 }

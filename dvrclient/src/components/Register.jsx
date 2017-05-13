@@ -48,12 +48,15 @@ export default class Register extends React.Component {
                 "FirstName": firstName,
                 "LastName": lastName
             }
+            //this is where you make that api call
+            if (data) {
+
+            }
         }
         history.push("/welcome");
     }
 
     registerTile() {
-        var passMatch = this.state.passNoMatch;
         return (
             <div className="mdl-card mdl-shadow--2dp registerCard">
                 <div className="mdl-card__title mdl-color--pink-A400 mdl-color-text--white">

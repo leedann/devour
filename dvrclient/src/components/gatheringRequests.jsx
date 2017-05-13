@@ -1,12 +1,9 @@
-import React from "react"
-import GRequestsList from "./gatheringRequest_tiles.jsx"
+import React from "react";
+import GRequestsList from "./gatheringRequest_tiles.jsx";
+import { Link } from 'react-router-dom';
 import Layout from "./Layout.jsx";
 
 export default class GatheringRequests extends React.Component {
-    constructor(props) {
-        super(props)
-    }
-
     render() {
         var d1 = new Date('09/09/2017');
         var d2 = new Date('12/12/2017');
@@ -18,22 +15,20 @@ export default class GatheringRequests extends React.Component {
         }
         var evnt2={
             id: 2,
-            Name: "Beach Bonfire Dinna Dinna",
-            Hosting: true,
+            Name: "Dinner at Danny's",
+            Hosting: false,
             StartTime: d2
         }
         var test = [evnt1, evnt2];
         return(
             <Layout title="social">
-                <div className="gatheringWrapper mdl-layout mdl-js-layout">
-                    <GRequestsList events={test} />
-                    <div>
-                        <div id="snackConfirm" className="mdl-js-snackbar mdl-snackbar">
-                        <div className="mdl-snackbar__text"></div>
-                            <button className="mdl-snackbar__action" type="button"></button>
-                        </div>
-                    </div>
-                </div>
+                <Link to="/social" className="eventLink">
+                    <span className="eventsRedir textAccent">
+                        <i className="eventsRedirButton material-icons">keyboard_backspace</i>
+                        <p>Events</p>
+                    </span>
+                </Link>
+                <GRequestsList events={test} />
             </Layout>
         );
     }

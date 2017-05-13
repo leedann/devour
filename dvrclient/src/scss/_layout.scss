@@ -1,12 +1,13 @@
 $paginateSize: 40px;
 $lightgrey: #E0E0E0;
+$washedAmber: #FFECB3;
 
 .homeButton {
     align-self: center
     
 }
-.homeIcon {
-    padding-left: 75px;
+.pageContent {
+    margin-bottom: 15vh;
 }
 .headerContent {
     border-bottom-style: solid;
@@ -24,43 +25,53 @@ $lightgrey: #E0E0E0;
     justify-content: center;
     align-self: center;
 }
-.footRight {
-    margin-right: 10vw;
-}
-.footLeft {
-    margin-left: 10vw;
-}
 
 .devourFooter {
     height: 66px;
-    position: fixed;
     padding: 0px;
-    bottom: 0px;
-    
+    width: 100vw;
+    justify-content: space-around;
+    @media (max-width: 450px) {
+        padding-right: 20px;
+    }
 }
+
+
 .devourFooter > a {
     width: 0;
 }
 
+.pageWrap {
+    min-height: 100%;
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+    flex-shrink: 0;
+}
 
-.paginate{
+.headerTitle {
+    margin-left: 6vw;
+}
+
+.paginate {
     font-size: $paginateSize;
 }
 
 .homeIcon {
     font-size: $paginateSize
 }
-.headerContent {
-    height: 100px;
-    top: 0;
-    position: absolute;
-}
-
-.layoutHeader {
-    display: flex;
-    justify-content: flex-start;
-}
 
 .headerRow {
-    padding-left: 5vw;
+    display: flex;
+    justify-content: space-between;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+
+//need flex here so it doesnt dissapear when resizing
+.layoutHeader {
+    display: flex;
+    //this is here because snackbar -- space between with snackbar makes content super close to header
+    margin-bottom: 20px;
 }

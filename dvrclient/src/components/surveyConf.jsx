@@ -13,7 +13,7 @@ export default class SurveyEnd extends React.Component {
                 <div className="messageContainer mdl-layout mdl-js-layout">
                     <h3 className="textAccent">All Finished!</h3>
                     <p>visit settings in the main menu to edit your <span className="textAccent">lifestyle preferences</span></p>
-                    <Link to='/recipes'><button className="dirToRecipes mdl-button mdl-js-button mdl-color--primary mdl-button--raised mdl-js-ripple-effect">Explore Recipes</button></Link>
+                    <Link to='/recipes'><button className="dirToRecipes mdl-button mdl-js-button backWash mdl-button--raised mdl-js-ripple-effect">Explore Recipes</button></Link>
                     <Link to='/home'><div className="skipSurvey">..or check out the homepage <i className="material-icons">restaurant_menu</i></div></Link>
                 </div>
             </div>

@@ -2,7 +2,7 @@ import React from "react";
 import Header from "./Header.jsx";
 import Footer from "./Footer.jsx";
 
-const homeIcons=["shopping_cart", "settings"];
+const homeIcons=["shopping_cart", "settings", "info"];
 const eventFooter=["Upcoming", "Past"];
 const recipeIcons=["search", "filter"];
 const planFooter=["Day", "Week"];
@@ -28,24 +28,19 @@ export default class Layout extends React.Component {
         switch (this.state.title) {
             case "devour":
                 return homeIcons;
-                break;
             case "taste profile":
                 return blank;
-                break;
             case "recipes":
-                return recipeIcons;
-                break; 
+                return recipeIcons; 
             case "social":
                 return socialIcons;
-                break;
             case "recipe book":
                 return base;
-                break;
             case "budget":
                 return base;
-                break;
             case "plan":
                 return base;
+            default:
                 break;
         }
     }
@@ -54,24 +49,19 @@ export default class Layout extends React.Component {
         switch (this.state.title) {
             case "devour":
                 return blank;
-                break;
             case "taste profile":
                 return blank
-                break;
             case "recipes":
                 return blank
-                break; 
             case "social":
                 return eventFooter;
-                break;
             case "recipe book":
                 return blank;
-                break;
             case "budget":
                 return budgetFooter;
-                break;
             case "plan":
                 return planFooter;
+            default:
                 break;
         }
     }
@@ -83,7 +73,14 @@ export default class Layout extends React.Component {
         return (
             <div className="pageWrap mdl-layout mdl-js-layout">
                 <Header title={this.state.title} page={headerIcons} />
-                { this.props.children }
+                {/*the spans here allow the page to fit nicely rather than overlap on the footy*/}
+                <span className="pageContent">{ this.props.children }</span>
+                <div>
+                    <div id="snackBar" className="mdl-js-snackbar mdl-snackbar">
+                    <div className="mdl-snackbar__text"></div>
+                        <button className="mdl-snackbar__action" type="button"></button>
+                    </div>
+                </div>
                 <Footer title={this.state.title} page={footieWords}/>
             </div>
         );

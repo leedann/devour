@@ -15,7 +15,7 @@ export default class Footer extends React.Component {
     }
 
     componentDidMount() {
-        if (this.state.title == "taste profile") {
+        if (this.state.title === "taste profile") {
             var index = surveyRoute.indexOf(location.pathname);
             this.setState({
                 leftAction: surveyRoute[index-1],
@@ -28,39 +28,58 @@ export default class Footer extends React.Component {
 
     }
 
+    blankFooter() {
+        return(
+            <div className="phantom">
+                <footer className="devourFooter mdl-mini-footer mdl-cell--12-col mdl-cell--8-col-phone mdl-cell--8-col-tablet">
+                    <div className="footLeft mdl-grid mdl-mini-footer__left-section">
+                    </div>
+                    <div className="centerFoot mdl-grid mdl-mini-footer__left-section">
+                    </div>
+                    <div className="footRight mdl-grid mdl-mini-footer__right-section">
+                    </div>
+                </footer>
+            </div>
+        );
+    }
+
     surveyFooter() {
         return (
-            <footer className="devourFooter mdl-mini-footer mdl-layout mdl-js-layout mdl-cell--12-col mdl-cell--8-col-phone mdl-cell--8-col-tablet">
-                <div className="footLeft mdl-grid mdl-mini-footer__left-section">
-                    <Link to={this.state.leftAction}><i className="paginate material-icons">chevron_left</i></Link>
-                </div>
-                <div className="mdl-layout-spacer"></div>
-                <Link to='/home'><i className="homeIcon material-icons">restaurant</i></Link>
-                <div className="mdl-layout-spacer"></div>
-                <div className="footRight mdl-grid mdl-mini-footer__right-section">
-                    <Link to={this.state.rightAction}><i className="paginate material-icons">chevron_right</i></Link>
-                </div>
-            </footer>
+            <div className="phantom">
+                <footer className="devourFooter mdl-mini-footer mdl-cell--12-col mdl-cell--8-col-phone mdl-cell--8-col-tablet">
+                    <div className="footLeft mdl-grid mdl-mini-footer__left-section">
+                        <Link to={this.state.leftAction}><i className="paginate material-icons">chevron_left</i></Link>
+                    </div>
+                    <div className="centerFoot mdl-grid mdl-mini-footer__left-section">
+                        <Link to='/home'><i className="homeIcon material-icons">restaurant</i></Link>
+                    </div>
+                    <div className="footRight mdl-grid mdl-mini-footer__right-section">
+                        <Link to={this.state.rightAction}><i className="paginate material-icons">chevron_right</i></Link>
+                    </div>
+                </footer>
+            </div>
         );
     }
 
     splitFooter() {
         return (
-            <footer className="devourFooter mdl-mini-footer mdl-layout mdl-js-layout mdl-cell--12-col mdl-cell--8-col-phone mdl-cell--8-col-tablet">
-                <div className="footLeft mdl-grid mdl-mini-footer__left-section">
-                    <button className="mdl-cell--stretch mdl-button mdl-js-button mdl-button--accent">
-                        <span>{this.state.left}</span>
-                    </button>
-                </div>
-                <div className="mdl-layout-spacer"></div>
-                <Link to='/home'><i className="homeIcon material-icons">restaurant</i></Link>
-                <div className="mdl-layout-spacer"></div>
-                <div className="footRight mdl-grid mdl-mini-footer__right-section">
-                    <button className="mdl-cell--stretch mdl-button mdl-js-button mdl-button--accent">
-                        <span>{this.state.right}</span>
-                    </button>
-                </div>
-            </footer>
+            <div className="phantom">
+                <footer className="devourFooter mdl-mini-footer mdl-cell--12-col mdl-cell--8-col-phone mdl-cell--8-col-tablet">
+                    <div className="footLeft mdl-grid mdl-mini-footer__left-section">
+                        <button id="upcomingButton" className="mdl-cell--stretch mdl-button mdl-js-button mdl-button--accent">
+                            <span>{this.state.left}</span>
+                        </button>
+                    </div>
+                    <div className="centerFoot mdl-grid mdl-mini-footer__left-section">
+                        <Link to='/home'><i className="homeIcon material-icons">restaurant</i></Link>
+                    </div>
+                    <div className="footRight mdl-grid mdl-mini-footer__right-section">
+                        <button id="pastButton" className="mdl-cell--stretch mdl-button mdl-js-button mdl-button--accent">
+                            <span>{this.state.right}</span>
+                        </button>
+                    </div>
+                </footer>
+            </div>
         );
     }
 
@@ -69,25 +88,20 @@ export default class Footer extends React.Component {
 render() {
         switch (this.state.title) {
             case "devour":
-                return (<span></span>);
-                break;
+                return this.blankFooter();
             case "taste profile":
                 return this.surveyFooter();
-                break;
             case "recipes":
                 return (<span></span>);
-                break; 
             case "social":
                 return this.splitFooter();
-                break;
             case "recipe book":
-                return (<span></span>)
-                break;
+                return this.blankFooter();
             case "budget":
                 return this.splitFooter()
-                break;
             case "plan":
                 return this.splitFooter();
+            default:
                 break;
         }
     }

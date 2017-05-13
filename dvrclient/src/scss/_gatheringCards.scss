@@ -1,9 +1,11 @@
 $lightgrey: #E0E0E0;
 $hotpink: #F50057;
-$darkGrey: darken($lightgrey, 25%);
+$darkGrey: darken($lightgrey, 60%);
 $font-accent: 'Kaushan Script', Helvetica, 'Arial Narrow', Verdana, Sans-serif; 
 $circleText: 25px;
 $textSize: 20px;
+$washedAmber: #FFECB3;
+$lightWash: lighten($washedAmber, 10%);
 
 .circleText {
     font-size: $circleText;
@@ -14,8 +16,20 @@ $textSize: 20px;
     margin: 0;
 }
 
+.eventsRedir {
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 20px;
+}
+.eventsRedirButton {
+    padding-right: 5px;
+}
+.eventLink {
+    text-decoration: none;
+}
+
 .gatheringWrapper {
-    margin-top: 120px;
+    margin-top: 100px;
 }
 
 .gatheringName {
@@ -61,6 +75,10 @@ $textSize: 20px;
 
 .listItem {
     padding: 0;
+}
+
+.listItem:hover {
+    cursor: pointer;
 }
 
 .longCardContent {

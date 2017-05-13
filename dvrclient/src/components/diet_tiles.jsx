@@ -30,7 +30,7 @@ export default class DietTile extends React.Component {
     }
 
     render() {
-        if (this.props.title == "Everything") {
+        if (this.props.title === "Everything") {
             return (
                 <div className="dietCard mdl-card mdl-shadow--2dp mdl-cell mdl-cell--2-col mdl-cell--2-col-phone mdl-cell--8-col-tablet" onClick={(e) => this.clickAction(e)} >
                     <div className="mdl-card__title dietName">{this.props.title}</div>

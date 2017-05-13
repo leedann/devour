@@ -1,15 +1,23 @@
 $font-body: Roboto, 'Helvetica Neue', Helvetica, Arial, Sans-serif;
 $font-accent: 'Kaushan Script', Helvetica, 'Arial Narrow', Verdana, Sans-serif; 
 $hotpink: #F50057;
+$washedAmber: #FFECB3;
+$lightWash: lighten($washedAmber, 12%);
 
 
 h1, h2, h3, h4, h5, h6 {
   font-family: $font-body;
   font-weight: 700;
 }
-
+html, body {
+  min-height: 100%;
+}
 body {
   font-family: $font-body;
+  background-color: $lightWash;
+}
+ul {
+  list-style-type: none;
 }
 .titleTag {
   text-align: center;
@@ -22,6 +30,34 @@ body {
   color: $hotpink;
 }
 
+.backWash {
+  background-color: $washedAmber;
+}
+
+.usrPhoto {
+    height: 100px;
+    width: 100px;
+    border-radius: 50px;
+    margin-bottom: 10px;
+}
+
+.smallUsrPhoto {
+    border-radius: 50px;
+    height: 65px;
+    width: 65px;
+    margin-right: 1.5vw;
+
+}
+
+li {
+  background-color: #FFFFFF;
+}
+//sends the footer to the end
+.phantom {
+  display: block;
+}
+
+
 
 @import "login";
 @import "dietCards";
@@ -30,3 +66,4 @@ body {
 @import "gatheringCards";
 @import "eventCard";
 @import "layout";
+@import "recipePage";

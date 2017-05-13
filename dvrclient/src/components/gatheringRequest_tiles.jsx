@@ -1,5 +1,5 @@
 import React from "react"
-import {LongCards, TitleWrap} from "./gathering_tiles.jsx"
+import {TitleWrap} from "./gathering_tiles.jsx"
 
 export default class GRequestsList extends React.Component {
     constructor(props) {
@@ -32,9 +32,7 @@ export default class GRequestsList extends React.Component {
 
     render() {
         return(
-            <div className="gatheringWrapper mdl-layout mdl-js-layout">
-                <TitleWrap key="requests" titleName="requests" arr={this.state.events} request={true}/>
-            </div>
+            <TitleWrap key="requests" titleName="requests" arr={this.state.events} request={true}/>
         );
     }
 }

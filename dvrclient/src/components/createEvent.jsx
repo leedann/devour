@@ -1,6 +1,5 @@
 import React from "react"
 import Textfield from 'react-mdl/lib/Textfield';
-import moment from "moment"
 import Layout from "./Layout.jsx";
 
 export default class CreateEvent extends React.Component {
@@ -17,7 +16,6 @@ export default class CreateEvent extends React.Component {
     render() {
         return(
             <Layout title="social">
-                <div className="eventWrapper mdl-layout mdl-js-layout">
                     <span className="titleName mdl-cell--12-col mdl-cell--8-col-phone">create event</span>
                     <div className="eventCard mdl-shadow--2dp mdl-grid">
                         <div className="eventName mdl-grid mdl-cell mdl-cell--6-col mdl-cell--8-col-phone mdl-cell--8-col-tablet">
@@ -43,7 +41,6 @@ export default class CreateEvent extends React.Component {
                             
                         </div>
                     </div>
-                </div>
             </Layout>
         );
     }
