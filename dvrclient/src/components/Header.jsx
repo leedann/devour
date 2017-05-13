@@ -35,6 +35,7 @@ export default class Header extends React.Component {
     }
 
     normalHeader() {
+        console.log(this.state)
         return (
         <div className="headerContent mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-cell mdl-cell--12-col mdl-cell--8-col-phone mdl-cell--8-col-tablet">
             <header className="layoutHeader mdl-color--white mdl-layout__header">
