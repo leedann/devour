@@ -1,0 +1,30 @@
+$washedAmber: #FFECB3;
+$lightWash: lighten($washedAmber, 10%);
+
+.menuItem {
+    text-align: center;
+}
+
+
+.homeIco {
+    height: 100px;
+    width: 100px;
+}
+
+.homeWrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.homeCards > .mdl-card__title {
+    display: flex;
+    justify-content: center;
+}
+
+.homeCards.mdl-card {
+    width: 250px;
+    max-height: 100px;
+    @media (max-width: 450px) {
+        height: 100px;
+    }
+}

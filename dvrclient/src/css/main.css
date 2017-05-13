@@ -1,0 +1,359 @@
+h1, h2, h3, h4, h5, h6 {
+  font-family: Roboto, "Helvetica Neue", Helvetica, Arial, Sans-serif;
+  font-weight: 700; }
+
+html, body {
+  min-height: 100%; }
+
+body {
+  font-family: Roboto, "Helvetica Neue", Helvetica, Arial, Sans-serif;
+  background-color: #fffbf0; }
+
+ul {
+  list-style-type: none; }
+
+.titleTag {
+  text-align: center; }
+
+.textSecondary {
+  font-family: "Kaushan Script", Helvetica, "Arial Narrow", Verdana, Sans-serif; }
+
+.textAccent {
+  color: #F50057; }
+
+.backWash {
+  background-color: #FFECB3; }
+
+.usrPhoto {
+  height: 100px;
+  width: 100px;
+  border-radius: 50px;
+  margin-bottom: 10px; }
+
+.smallUsrPhoto {
+  border-radius: 50px;
+  height: 65px;
+  width: 65px;
+  margin-right: 1.5vw; }
+
+li {
+  background-color: #FFFFFF; }
+
+.phantom {
+  display: block; }
+
+.loginCard {
+  width: 325px;
+  height: 300px; }
+
+.registerCard {
+  width: 325px;
+  height: 600px; }
+
+.lrContainer {
+  max-width: 325px; }
+
+.startPage {
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.9)), url("/img/frontpage.jpg") center/cover; }
+
+.titleName {
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+
+.titleTag {
+  padding-top: 5vh; }
+
+.mainContent {
+  display: flex;
+  justify-content: center; }
+
+.backToLogin, .forgot {
+  font-size: 12px; }
+
+.center_title {
+  padding-left: 40vw;
+  font-size: 5vh; }
+  @media (max-width: 450px) {
+    .center_title {
+      padding-left: 25vw;
+      font-size: 6vw; } }
+
+.dietName {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; }
+
+.dietCard:hover {
+  background-color: #F5F5F5; }
+
+.dietGrid {
+  width: 300px; }
+  @media (min-width: 840px) {
+    .dietGrid {
+      width: 80vw; } }
+
+.surveywrapper {
+  margin-top: 90px; }
+
+.menuItem {
+  text-align: center; }
+
+.homeIco {
+  height: 100px;
+  width: 100px; }
+
+.homeWrapper {
+  display: flex;
+  justify-content: center; }
+
+.homeCards > .mdl-card__title {
+  display: flex;
+  justify-content: center; }
+
+.homeCards.mdl-card {
+  width: 250px;
+  max-height: 100px; }
+  @media (max-width: 450px) {
+    .homeCards.mdl-card {
+      height: 100px; } }
+
+.welcomePage {
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+
+.messageContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+
+.messageContainer > p {
+  max-width: 50vw;
+  text-align: center; }
+
+.beginSurveyButton {
+  background-color: #F50057;
+  color: #FFF; }
+
+.skipSurvey {
+  margin-top: 30px;
+  color: #F50057;
+  font-size: 1em; }
+
+.circleText {
+  font-size: 25px;
+  fill: #474747; }
+
+.dateTitleWrap {
+  margin: 0; }
+
+.eventsRedir {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 20px; }
+
+.eventsRedirButton {
+  padding-right: 5px; }
+
+.eventLink {
+  text-decoration: none; }
+
+.gatheringWrapper {
+  margin-top: 100px; }
+
+@media (min-width: 841px) {
+  .gatheringName {
+    font-size: 1vw; } }
+
+.reqAnswer {
+  margin-left: auto;
+  padding-right: 15px; }
+
+.reject, .accept {
+  font-size: 30px; }
+
+.dayIcon {
+  height: 92px;
+  width: 96px; }
+
+.dayCircle {
+  stroke-width: 2;
+  fill: #E0E0E0; }
+
+.titleChildren {
+  padding: 0; }
+
+.titleName {
+  font-family: "Kaushan Script", Helvetica, "Arial Narrow", Verdana, Sans-serif;
+  font-size: 20px;
+  text-align: center;
+  align-self: flex-start;
+  width: 100vw; }
+
+.longCardContainer {
+  padding: 0;
+  width: 100vw; }
+
+.listItem {
+  padding: 0; }
+
+.listItem:hover {
+  cursor: pointer; }
+
+@media (min-width: 800px) {
+  .longCardContent {
+    display: flex;
+    align-content: center;
+    justify-content: flex-start; } }
+
+.eventHeader {
+  color: #F50057; }
+
+.eventName, .eventDesc {
+  border-bottom: #E0E0E0;
+  border-bottom-style: solid;
+  border-width: 1px;
+  margin: 0px;
+  padding: 20px; }
+
+.eventTitleCircle {
+  margin-bottom: 10px; }
+
+.evtCircleText {
+  font-size: 2em;
+  fill: #474747; }
+
+.eventWrapper {
+  display: flex;
+  justify-content: center; }
+
+.eventCard {
+  margin-top: 40px;
+  padding: 0;
+  width: 91vw;
+  background-color: #FFFFFF; }
+
+.evtCardName {
+  color: #949494;
+  font-size: 1.5em; }
+
+.eventTitleCard {
+  max-height: 10vh;
+  max-width: 44.5vw;
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+
+.recommendRecipes {
+  max-width: 91vw; }
+
+.eventWideTitleCard {
+  max-width: 91vw; }
+
+.homeButton {
+  align-self: center; }
+
+.pageContent {
+  margin-bottom: 15vh; }
+
+.headerContent {
+  border-bottom-style: solid;
+  border-color: #E0E0E0;
+  border-width: 1px;
+  margin-bottom: 20px; }
+
+.headerico {
+  margin-left: 15px; }
+
+.footRight, .footLeft {
+  display: flex;
+  justify-content: center;
+  align-self: center; }
+
+.devourFooter {
+  height: 66px;
+  padding: 0px;
+  width: 100vw;
+  justify-content: space-around; }
+  @media (max-width: 450px) {
+    .devourFooter {
+      padding-right: 20px; } }
+
+.devourFooter > a {
+  width: 0; }
+
+.pageWrap {
+  min-height: 100%;
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  flex-shrink: 0; }
+
+.headerTitle {
+  margin-left: 6vw; }
+
+.paginate {
+  font-size: 40px; }
+
+.homeIcon {
+  font-size: 40px; }
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 30px;
+  padding-right: 30px; }
+
+.layoutHeader {
+  display: flex;
+  margin-bottom: 20px; }
+
+.recipeWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 350px; }
+  @media (min-width: 841px) {
+    .recipeWrapper {
+      height: 300px;
+      max-width: 35vw; } }
+
+.recipeCard {
+  height: 300px;
+  margin-bottom: 25px; }
+  @media (min-width: 841px) {
+    .recipeCard {
+      height: 300px; } }
+
+.imageContainer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end; }
+
+.recipeName {
+  font-size: 1.25em;
+  fill: #474747; }
+
+.favButton {
+  align-self: flex-start;
+  margin-bottom: 0;
+  margin-right: 0; }
+
+.recipeActions {
+  display: flex; }
+
+.recipeActions:hover {
+  cursor: pointer; }
+
+.recipeActions > i {
+  margin-left: 8px;
+  padding-bottom: 30px; }
+
+.recipeTime {
+  font-size: 12px; }
+
+.recipeInfo {
+  overflow-y: scroll; }
+
+/*# sourceMappingURL=main.css.map */

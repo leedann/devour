@@ -1,0 +1,37 @@
+$backIma: url('/img/frontpage.jpg');
+$transparentOverlay: linear-gradient(to top, rgba(255,255,255,.5), rgba(255,255,255,.9));
+$redirectFontSize: 12px;
+
+
+.loginCard {
+    width: 325px;
+    height: 300px;
+}
+.registerCard {
+    width: 325px;
+    height: 600px;
+}
+.lrContainer {
+    max-width: 325px;
+}
+.startPage {
+    background: $transparentOverlay, $backIma  center / cover;
+}
+
+.titleName {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.titleTag {
+    padding-top: 5vh;
+}
+.mainContent {
+    display: flex;
+    justify-content: center;
+}
+
+.backToLogin, .forgot {
+    font-size: $redirectFontSize;
+}

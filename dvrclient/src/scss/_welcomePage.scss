@@ -1,0 +1,28 @@
+$hotpink: #F50057;
+
+.welcomePage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.messageContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.messageContainer > p {
+    max-width: 50vw;
+    text-align: center;
+}
+.beginSurveyButton {
+    background-color: $hotpink;
+    color: #FFF;
+}
+
+.skipSurvey {
+    margin-top: 30px;
+    color: $hotpink;
+    font-size: 1em;
+
+}

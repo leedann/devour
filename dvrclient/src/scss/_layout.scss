@@ -1,0 +1,77 @@
+$paginateSize: 40px;
+$lightgrey: #E0E0E0;
+$washedAmber: #FFECB3;
+
+.homeButton {
+    align-self: center
+    
+}
+.pageContent {
+    margin-bottom: 15vh;
+}
+.headerContent {
+    border-bottom-style: solid;
+    border-color: $lightgrey;
+    border-width: 1px;
+    margin-bottom: 20px;
+}
+
+.headerico {
+    margin-left: 15px;
+}
+
+.footRight, .footLeft {
+    display: flex;
+    justify-content: center;
+    align-self: center;
+}
+
+.devourFooter {
+    height: 66px;
+    padding: 0px;
+    width: 100vw;
+    justify-content: space-around;
+    @media (max-width: 450px) {
+        padding-right: 20px;
+    }
+}
+
+
+.devourFooter > a {
+    width: 0;
+}
+
+.pageWrap {
+    min-height: 100%;
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+    flex-shrink: 0;
+}
+
+.headerTitle {
+    margin-left: 6vw;
+}
+
+.paginate {
+    font-size: $paginateSize;
+}
+
+.homeIcon {
+    font-size: $paginateSize
+}
+
+.headerRow {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+
+//need flex here so it doesnt dissapear when resizing
+.layoutHeader {
+    display: flex;
+    //this is here because snackbar -- space between with snackbar makes content super close to header
+    margin-bottom: 20px;
+}

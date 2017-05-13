@@ -1,0 +1,64 @@
+$lightgrey: #E0E0E0;
+$hotpink: #F50057;
+$darkgrey: darken($lightgrey, 30%);
+$lightblack: darken($lightgrey, 60%);
+$font-accent: 'Kaushan Script', Helvetica, 'Arial Narrow', Verdana, Sans-serif; 
+$circleText: 25px;
+$textSize: 20px;
+
+.recipeWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 350px;
+    @media (min-width: 841px) {
+        height: 300px;
+        max-width: 35vw;
+    }
+}
+
+.recipeCard {
+    height: 300px;
+    @media (min-width: 841px) {
+        height: 300px;
+    }
+    margin-bottom: 25px;
+}
+
+//moves the button to bottom right
+.imageContainer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+.recipeName {
+    font-size: 1.25em;
+    fill: $lightblack;
+}
+
+.favButton {
+    align-self: flex-start;
+    margin-bottom: 0;
+    margin-right: 0;
+}
+
+.recipeActions {
+    display: flex;
+}
+
+.recipeActions:hover {
+    cursor: pointer;
+}
+
+.recipeActions > i {
+    margin-left: 8px;
+    padding-bottom: 30px;
+}
+
+.recipeTime {
+    font-size: 12px;
+}
+
+.recipeInfo {
+    overflow-y: scroll
+}

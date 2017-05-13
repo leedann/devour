@@ -1,0 +1,62 @@
+$hotpink: #F50057;
+$lightgrey: #E0E0E0;
+$darkgrey: darken($lightgrey, 30%);
+$lightblack: darken($lightgrey, 60%);
+$font-body: Roboto, 'Helvetica Neue', Helvetica, Arial, Sans-serif;
+$screenSize: 91vw;
+$washedAmber: #FFECB3;
+$lightWash: lighten($washedAmber, 10%);
+.eventHeader {
+    color: $hotpink;
+}
+
+.eventName, .eventDesc {
+    border-bottom: $lightgrey;
+    border-bottom-style: solid;
+    border-width: 1px;
+    margin: 0px;
+    padding: 20px;
+}
+.eventTitleCircle {
+    margin-bottom: 10px;
+}
+
+.evtCircleText {
+    font-size: 2em;
+    fill: $lightblack;
+}
+
+.eventWrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.eventCard {
+    margin-top: 40px;
+    padding: 0;
+    width: $screenSize;
+    background-color: #FFFFFF;
+
+}
+
+.evtCardName {
+    color: $darkgrey;
+    font-size: 1.5em;
+}
+
+.eventTitleCard {
+    max-height: 10vh;
+    max-width: $screenSize/2 - 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.recommendRecipes {
+    max-width: $screenSize;
+}
+
+.eventWideTitleCard {
+    max-width: $screenSize;
+}
+
