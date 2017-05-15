@@ -1,5 +1,6 @@
 import React from "react"
 
+//TODO: friend cards--long tiles
 export default class Friend_Cards extends React.Component {
     constructor(props) {
         super(props)

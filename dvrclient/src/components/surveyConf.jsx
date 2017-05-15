@@ -1,5 +1,7 @@
 import React from "react"
 import { Link } from 'react-router-dom';
+
+//This marks the end of the survey
 export default class SurveyEnd extends React.Component {
     constructor(props) {
         super(props)

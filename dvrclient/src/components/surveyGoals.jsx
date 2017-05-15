@@ -2,6 +2,7 @@ import React from "react";
 import DietTile from "./diet_tiles.jsx"
 import Layout from "./Layout.jsx";
 
+//the survey goals -- why the user is using 
 export default class SurveyGoals extends React.Component {
     constructor(props) {
         super(props)
@@ -9,7 +10,7 @@ export default class SurveyGoals extends React.Component {
     }
 
     render() {
-        //test array
+        //probally not pertinent to the functioning of the app
         var goals = ["All of these Reasons", "Plan group meals", "Learn to cook", "Eat Healthy", "Find Recipes", "Plan Meals", "Entertain", "Stick to a Diet", "Budget"]
         return(
             <Layout title="taste profile">

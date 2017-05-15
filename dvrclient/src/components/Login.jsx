@@ -2,7 +2,8 @@ import React from "react";
 import { Link } from 'react-router-dom';
 import {history} from './app.jsx'
 
-export default class LoginRegister extends React.Component {
+//The login tile
+export default class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -23,7 +24,7 @@ export default class LoginRegister extends React.Component {
             "Email": email,
             "Password": password
         }
-        //this is where you make the api call
+        //users api call here
         if (userinfo) {
 
         }

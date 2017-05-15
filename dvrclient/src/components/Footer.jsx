@@ -1,7 +1,9 @@
 import React from "react";
 import { Link } from 'react-router-dom';
 
+//the routes from welcome all the way to the end of the survey screens
 const surveyRoute = ["/welcome", "/survey", "/selectgoals", "/allergyinfo", "/surveyend"];
+//The footer of every page
 export default class Footer extends React.Component {
     constructor(props) {
         super(props);
@@ -14,6 +16,7 @@ export default class Footer extends React.Component {
         }
     }
 
+    //Gets the next and previous routes for the bottom nav
     componentDidMount() {
         if (this.state.title === "taste profile") {
             var index = surveyRoute.indexOf(location.pathname);
@@ -24,10 +27,12 @@ export default class Footer extends React.Component {
         }
     }
 
+    //TODO: helper for the upcoming and past buttons at the bottom
     surveyHelper() {
 
     }
 
+    //a blank footer for pages that do not require any buttons
     blankFooter() {
         return(
             <div className="phantom">
@@ -43,6 +48,7 @@ export default class Footer extends React.Component {
         );
     }
 
+    //buttons for the survey -- will use the nav keywords to link to pages forwards and backwards
     surveyFooter() {
         return (
             <div className="phantom">
@@ -61,6 +67,7 @@ export default class Footer extends React.Component {
         );
     }
 
+    //split footer-- upcoming and past 
     splitFooter() {
         return (
             <div className="phantom">
@@ -84,7 +91,7 @@ export default class Footer extends React.Component {
     }
 
 
-
+//renders a different footer based on the title of the state (the title is the main page section)
 render() {
         switch (this.state.title) {
             case "devour":

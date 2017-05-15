@@ -3,6 +3,7 @@ import GRequestsList from "./gatheringRequest_tiles.jsx";
 import { Link } from 'react-router-dom';
 import Layout from "./Layout.jsx";
 
+//The actually events requests the user has
 export default class GatheringRequests extends React.Component {
     render() {
         var d1 = new Date('09/09/2017');

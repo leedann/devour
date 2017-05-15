@@ -15,17 +15,18 @@ func (ps *PGStore) GetAll() ([]*User, error) {
 	var users []*User
 
 	//Query the database to return multiple rows
-	rows, err := ps.DB.Query(`SELECT ID, Email, FirstName, LastName, PassHash, PhotoURL, DOB FROM users`)
+	rows, err := ps.DB.Query(`SELECT ID, Email, FirstName, LastName, PassHash, PhotoURL, UserName FROM users`)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 	//Next refers to the first row initially
 	//returns false once EOF
+	fmt.Print(rows)
 	for rows.Next() {
 		var user = &User{}
 		//scans values into User struct; error returned if scan unsuccessful
-		if err := rows.Scan(&user.ID, &user.Email, &user.FirstName, &user.LastName, &user.PassHash, &user.PhotoURL, &user.DOB); err != nil {
+		if err := rows.Scan(&user.ID, &user.Email, &user.FirstName, &user.LastName, &user.PassHash, &user.PhotoURL, &user.UserName); err != nil {
 			return nil, err
 		}
 		//adds to array
@@ -43,7 +44,7 @@ func (ps *PGStore) GetAll() ([]*User, error) {
 func (ps *PGStore) GetByID(id UserID) (*User, error) {
 	var user = &User{}
 	//Queries and then scans; error returned if the scan unsuccessful
-	err := ps.DB.QueryRow(`SELECT ID, Email, FirstName, LastName, PassHash, PhotoURL, DOB FROM users WHERE ID = $1`, id).Scan(&user.ID, &user.Email, &user.FirstName, &user.LastName, &user.PassHash, &user.PhotoURL)
+	err := ps.DB.QueryRow(`SELECT ID, Email, FirstName, LastName, PassHash, PhotoURL, UserName FROM users WHERE ID = $1`, id).Scan(&user.ID, &user.Email, &user.FirstName, &user.LastName, &user.PassHash, &user.PhotoURL, &user.UserName)
 	if err == sql.ErrNoRows || err != nil {
 		return nil, err
 	}
@@ -53,7 +54,17 @@ func (ps *PGStore) GetByID(id UserID) (*User, error) {
 //GetByEmail returns the User with the given email
 func (ps *PGStore) GetByEmail(email string) (*User, error) {
 	var user = &User{}
-	err := ps.DB.QueryRow(`SELECT ID, Email, FirstName, LastName, PassHash, PhotoURL, DOB FROM users WHERE Email = $1`, email).Scan(&user.ID, &user.Email, &user.FirstName, &user.LastName, &user.PassHash, &user.PhotoURL)
+	err := ps.DB.QueryRow(`SELECT ID, Email, FirstName, LastName, PassHash, PhotoURL, UserName FROM users WHERE Email = $1`, email).Scan(&user.ID, &user.Email, &user.FirstName, &user.LastName, &user.PassHash, &user.PhotoURL, &user.UserName)
+	if err == sql.ErrNoRows || err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
+//GetByUserName returns the User with the given user name
+func (ps *PGStore) GetByUserName(name string) (*User, error) {
+	var user = &User{}
+	err := ps.DB.QueryRow(`SELECT ID, Email, FirstName, LastName, PassHash, PhotoURL, UserName FROM users WHERE UserName = $1`, name).Scan(&user.ID, &user.Email, &user.FirstName, &user.LastName, &user.PassHash, &user.PhotoURL, &user.UserName)
 	if err == sql.ErrNoRows || err != nil {
 		return nil, err
 	}
@@ -78,9 +89,9 @@ func (ps *PGStore) Insert(newUser *NewUser) (*User, error) {
 	if err != nil {
 		return nil, err
 	}
-	sql := `INSERT INTO users (email, passhash, firstname, lastname, photourl, dob) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`
+	sql := `INSERT INTO users (email, passhash, username, firstname, lastname, photourl, mobilephone) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`
 	//Receives ONE row from the database
-	row := tx.QueryRow(sql, u.Email, u.PassHash, u.FirstName, u.LastName, u.PhotoURL, u.DOB)
+	row := tx.QueryRow(sql, u.Email, u.PassHash, u.UserName, u.FirstName, u.LastName, u.PhotoURL, u.MobilePhone)
 	//scans the value of ID returned from query INTO the user
 	err = row.Scan(&u.ID)
 	//err if cant scan -- rollback transaction

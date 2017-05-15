@@ -11,6 +11,7 @@ const budgetFooter=["Dashboard", "Spending"];
 const base=["", "info"];
 const blank=["",""]
 
+//The layout of the page -- wraps all of the other pages in a header and footer
 export default class Layout extends React.Component {
     constructor(props) {
         super(props);
@@ -24,6 +25,7 @@ export default class Layout extends React.Component {
     componentDidMount() {
     }
 
+    //helps the header get its icons
     iconHelper() {
         switch (this.state.title) {
             case "devour":
@@ -45,6 +47,7 @@ export default class Layout extends React.Component {
         }
     }
 
+    //helps the footer get its words
     footerHelper() {
         switch (this.state.title) {
             case "devour":

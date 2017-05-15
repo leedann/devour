@@ -14,6 +14,7 @@ import (
 
 	"github.com/info344-s17/challenges-leedann/apiserver/handlers"
 	"github.com/info344-s17/challenges-leedann/apiserver/middleware"
+	"github.com/info344-s17/challenges-leedann/apiserver/models/messages"
 	"github.com/info344-s17/challenges-leedann/apiserver/models/users"
 	"github.com/info344-s17/challenges-leedann/apiserver/sessions"
 	_ "github.com/lib/pq"
@@ -29,6 +30,9 @@ const (
 	sess       = "sessions"
 	sessme     = "sessions/mine"
 	usrme      = "users/me"
+	channels   = "channels"
+	specific   = "/"
+	msgs       = "messages"
 )
 
 //main is the main entry point for this program
@@ -57,12 +61,23 @@ func main() {
 		DB:       0,
 	})
 	pgAddr := strings.Split(DBADDR, ":")
-	datasrcName := fmt.Sprintf("user=pgstest dbname=pgstest sslmode=disable host=%s port=%s", pgAddr[0], pgAddr[1])
+	datasrcName := fmt.Sprintf("user=pgstest dbname=pg2 sslmode=disable host=%s port=%s", pgAddr[0], pgAddr[1])
 	pgstore, err := sql.Open("postgres", datasrcName)
+
+	_, err = pgstore.Exec("DELETE FROM users")
+	_, err = pgstore.Exec("DELETE FROM channels")
+	_, err = pgstore.Exec("DELETE FROM messages")
+	_, err = pgstore.Exec("ALTER SEQUENCE users_id_seq RESTART")
+	_, err = pgstore.Exec("ALTER SEQUENCE channels_id_seq RESTART")
+	_, err = pgstore.Exec("ALTER SEQUENCE messages_id_seq RESTART")
+
 	if err != nil {
 		log.Fatalf("error starting db: %v", err)
 	}
-	store := &users.PGStore{
+	usrStore := &users.PGStore{
+		DB: pgstore,
+	}
+	msgStore := &messages.PGStore{
 		DB: pgstore,
 	}
 	//Pings the DB-- establishes a connection to the db
@@ -72,16 +87,39 @@ func main() {
 	}
 	redisStore := sessions.NewRedisStore(client, time.Hour*3600)
 
+	//creating the starting table "general"
 	ctx := &handlers.Context{
 		SessionKey:   SESSIONKEY,
 		SessionStore: redisStore,
-		UserStore:    store,
+		UserStore:    usrStore,
+		MessageStore: msgStore,
 	}
+
+	gen := &messages.NewChannel{
+		Name:        "General",
+		Description: "General channel",
+		Private:     false,
+	}
+	newUser := &users.NewUser{
+		Email:        "general@tso.com",
+		Password:     "chicken",
+		PasswordConf: "chicken",
+		UserName:     "GeneralAdmin",
+		FirstName:    "Gen",
+		LastName:     "Gin",
+	}
+	user, _ := ctx.UserStore.Insert(newUser)
+	ctx.MessageStore.InsertChannel(gen, &user.ID)
+
 	mux := http.NewServeMux()
 	mux.HandleFunc(apiRoot+usr, ctx.UserHandler)
 	mux.HandleFunc(apiRoot+sess, ctx.SessionsHandler)
 	mux.HandleFunc(apiRoot+sessme, ctx.SessionsMineHandler)
 	mux.HandleFunc(apiRoot+usrme, ctx.UsersMeHandler)
+	mux.HandleFunc(apiRoot+channels, ctx.ChannelsHandler)
+	mux.HandleFunc(apiRoot+channels+specific, ctx.SpecificChannelHandler)
+	mux.HandleFunc(apiRoot+msgs, ctx.MessagesHandler)
+	mux.HandleFunc(apiRoot+msgs+specific, ctx.SpecificMessageHandler)
 	mux.HandleFunc(apiSummary, handlers.SummaryHandler)
 	http.Handle(apiRoot, middleware.Adapt(mux, middleware.CORS("", "", "", "")))
 

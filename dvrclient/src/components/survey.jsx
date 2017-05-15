@@ -9,7 +9,7 @@ export default class Survey extends React.Component {
     }
 
     render() {
-        //test array
+        //The survey array-- will have to get the popular diet types from yummly
         var diets = ["Everything", "Vegetarian", "Vegan", "Low Carb", "Pescetarian", "Paleo", "Gluten-Free", "Flexitarian", "Pollotarian"]
         return(
             <Layout title="taste profile">

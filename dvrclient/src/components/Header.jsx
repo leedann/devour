@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from 'react-router-dom';
 
+//the buttons for the header
 const buttons= {
     "/home": ["/shop", "/settings", "/info"],
     "/recipes": ["/search", "/filter"],
@@ -8,9 +9,11 @@ const buttons= {
     "/create": ["/create", "/info"],  
     "/info": ["/create", "/info"],  
 }
+//the header of every page, the buttons vary from page to page
 export default class Header extends React.Component {
     constructor(props) {
         super(props);
+        //gets the first portion of the page -- matches the first part of the path
         var strings = location.pathname.split("/", 2)
         this.state={
             icon1: this.props.page[0],
@@ -22,6 +25,8 @@ export default class Header extends React.Component {
     }
     componentDidMount() {
     }
+
+    //the header for the survey pages
     surveyHeader() {
         return (
                 <header className="layoutHeader mdl-color--white mdl-layout__header">
@@ -32,6 +37,7 @@ export default class Header extends React.Component {
         );
     }
 
+    //the normal headers with buttons
     normalHeader() {
         return (
             <header className="layoutHeader mdl-color--white mdl-layout__header">

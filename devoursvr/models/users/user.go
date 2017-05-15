@@ -19,13 +19,14 @@ type UserID interface{}
 
 //User represents a user account in the database
 type User struct {
-	ID        UserID `json:"id" bson:"_id"`
-	Email     string `json:"email"`
-	PassHash  []byte `json:"-" bson:"passHash"` //stored in mongo, but never encoded to clients
-	FirstName string `json:"firstName"`
-	LastName  string `json:"lastName"`
-	DOB       string `json:"dob"`
-	PhotoURL  string `json:"photoURL"`
+	ID          UserID `json:"id" bson:"_id"`
+	Email       string `json:"email"`
+	PassHash    []byte `json:"-" bson:"passHash"` //stored in mongo, but never encoded to clients
+	UserName    string `json:"userName"`
+	FirstName   string `json:"firstName"`
+	LastName    string `json:"lastName"`
+	PhotoURL    string `json:"photoURL"`
+	MobilePhone string `json:"mobilePhone"`
 }
 
 //Credentials represents user sign-in credentials
@@ -39,9 +40,10 @@ type NewUser struct {
 	Email        string `json:"email"`
 	Password     string `json:"password"`
 	PasswordConf string `json:"passwordConf"`
-	DOB          string `json:"dob"`
+	UserName     string `json:"userName"`
 	FirstName    string `json:"firstName"`
 	LastName     string `json:"lastName"`
+	MobilePhone  string `json:"mobilePhone"`
 }
 
 //UserUpdates represents updates one can make to a user
@@ -71,6 +73,12 @@ func (nu *NewUser) Validate() error {
 
 	if nu.Password != nu.PasswordConf {
 		return fmt.Errorf("passwords do not match")
+	}
+
+	//ensure UserName has non-zero length
+
+	if len(nu.UserName) <= 0 {
+		return fmt.Errorf("missing username")
 	}
 
 	//if you made here, it's valid, so return nil
@@ -110,7 +118,8 @@ func userSetting(u *User, nu *NewUser) {
 	u.Email = nu.Email
 	u.FirstName = nu.FirstName
 	u.LastName = nu.LastName
-	u.DOB = nu.DOB
+	u.UserName = nu.UserName
+	u.MobilePhone = nu.MobilePhone
 }
 
 //SetPassword hashes the password and stores it in the PassHash field

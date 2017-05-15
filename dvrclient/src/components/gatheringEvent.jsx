@@ -3,7 +3,7 @@ import Layout from "./Layout.jsx";
 import { Link } from 'react-router-dom';
 import moment from "moment";
 
-//redir if user is not authenticated without rendering anything
+//TODO: redir if user is not authenticated without rendering anything
 //append id to the end of this url
 var d2 = new Date('12/12/2017');
 var day = moment(d2).format("D");
@@ -18,6 +18,7 @@ var evnt2={
     Time: "6:00pm",
     StartTime: d2
 }
+//testing the images of who is going
 var going=["https://www.gravatar.com/avatar/0e58cf2f03c9a0a5d6965154837cd595", "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50"]
 //This is the page for a particular event
 export default class GatheringPage extends React.Component {
@@ -31,6 +32,7 @@ export default class GatheringPage extends React.Component {
     componentDidMount() {
     }
 
+    //Event page -- hard coded
     render() {
         var doubleNum = day >= 10;
         return(

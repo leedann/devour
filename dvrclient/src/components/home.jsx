@@ -2,6 +2,7 @@ import React from "react"
 import Layout from "./Layout.jsx";
 import { Link } from 'react-router-dom';
 
+//The home page -- renders all of the tiles of the home page
 export default class Home extends React.Component {
     render() {
         return(
