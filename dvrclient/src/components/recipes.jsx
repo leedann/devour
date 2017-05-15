@@ -27,7 +27,13 @@ var rec3={
     CookTime: "35m"
 }
 
+const baseurl='https://api.yummly.com/v1';
+const apiHeader = new Headers();
+apiHeader.append("X-Yummly-App-ID", "f3a4ad3c");
+apiHeader.append("X-Yummly-App-Key", "8377c0df84a59fd60a40c2cb0ce4a964");
 
+
+//the cards for the recipes
 class RecipeCard extends React.Component {
     constructor(props) {
         super(props)
@@ -36,15 +42,18 @@ class RecipeCard extends React.Component {
         }
     }
 
+    //toggles the info table 
     showInfo() {
         var tab = document.getElementById(this.props.details.ID + "info")
         tab.classList.toggle("hidden")
     }
 
+    //the snackbar confirmation for adding a recipe -- this doesnt work until you refresh the Recipe
+    //will not work when you redir from a page
     addRecipe() {
         var snackbarContainer = document.getElementById("snackBar");
         var recipeInfo = this.props.details
-        //make ajax with recipe info to add to user's book
+        //add a call to the yummly api with the params
         var handler = function(event) {
 
         };
@@ -57,6 +66,7 @@ class RecipeCard extends React.Component {
         snackbarContainer.MaterialSnackbar.showSnackbar(data);
     }
 
+    //currently splits the ingredients and desc but will have to work with yummly
     render() {
         var allIng = this.props.details.Ingredients.split(";")
         var allDesc = this.props.details.Description.split(";")
@@ -99,6 +109,7 @@ class RecipeCard extends React.Component {
     }
 }
 
+// the page of the recipes
 export default class RecipePage extends React.Component {
     constructor(props) {
         super(props)

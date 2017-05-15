@@ -1,5 +1,6 @@
 import React from "react"
 import { Link } from 'react-router-dom';
+//the welcoming page shown after registration
 export default class Welcome extends React.Component {
     constructor(props) {
         super(props)

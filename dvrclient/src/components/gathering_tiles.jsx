@@ -15,9 +15,11 @@ class LongCards extends React.Component {
         this.handleEvntClick = this.handleEvntClick.bind(this)
     }
 
+    //clicking the event tile will send you to the particular event
     handleEvntClick(evt) {
         //state in push goes to this.location.state
         if (evt.target.tagName !== 'I') {
+            //will need to render a different event based on referrer
             history.push("/social/event")
         }
     }
@@ -32,12 +34,14 @@ class LongCards extends React.Component {
                         <div className="dateTitleWrap">
                             <svg className="dayIcon">
                                 <circle cx="50" cy="50" r="23" className="dayCircle" />
+                                {/*resizing of the day icon based on the length of day*/}
                                 {doubleNum? <text className="circleText" x="35" y="59">{this.state.day}</text> : <text className="circleText" x="43" y="59">{this.state.day}</text>}
                             </svg>
                             <span className="gatheringName">
                                 {this.state.name}
                             </span>
                         </div>
+                    {/*the accept and reject button*/}
                     {this.props.children}
                     </span>
                 </li>
@@ -70,7 +74,7 @@ class LongCards extends React.Component {
 }
 
 
-//takes an array and a title and wraps the cards in a title
+//takes an array and a title and wraps the cards in a title (ie. events requests, or events/ possible friends?)
 export class TitleWrap extends React.Component {
     constructor(props) {
         super(props)
@@ -80,7 +84,7 @@ export class TitleWrap extends React.Component {
             request: this.props.request
         }
     }
-    //will need to rerender page to show updated
+    //will need to rerender page to show the snackbar (weird)
     handleRequestClick(event) {
         var target = event.currentTarget;
         var buttonClass = target.className.split(" ");
@@ -169,6 +173,7 @@ export default class GatheringList extends React.Component {
         var allMonths = this.state.events;
         allMonths.sort(this.compareDate)
         var eventObj={}
+        //gets all the months of the events and orders them
         for (var i = 0; i < allMonths.length; i++) {
             var month = moment(allMonths[i].StartTime).format("MMMM")
             //if month isnt in the obj
@@ -184,9 +189,6 @@ export default class GatheringList extends React.Component {
         })
     }
 
-    clickAction(e) {
-        e.preventDefault()
-    }
 
     render() {
         var eventObj = this.state.events

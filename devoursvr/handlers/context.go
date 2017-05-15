@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"github.com/info344-s17/challenges-leedann/apiserver/models/messages"
 	"github.com/info344-s17/challenges-leedann/apiserver/models/users"
 	"github.com/info344-s17/challenges-leedann/apiserver/sessions"
 )
@@ -10,4 +11,5 @@ type Context struct {
 	SessionKey   string
 	SessionStore sessions.Store
 	UserStore    users.Store
+	MessageStore messages.Store
 }

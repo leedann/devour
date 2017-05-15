@@ -2,6 +2,7 @@ import React from "react"
 import Textfield from 'react-mdl/lib/Textfield';
 import Layout from "./Layout.jsx";
 
+//The event creation page
 export default class CreateEvent extends React.Component {
     constructor(props) {
         super(props)

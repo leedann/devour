@@ -19,6 +19,9 @@ type Store interface {
 	//GetByEmail returns the User with the given email
 	GetByEmail(email string) (*User, error)
 
+	//GetByUserName returns the User with the given user name
+	GetByUserName(name string) (*User, error)
+
 	//Insert inserts a new NewUser into the store
 	//and returns a User with a newly-assigned ID
 	Insert(newUser *NewUser) (*User, error)

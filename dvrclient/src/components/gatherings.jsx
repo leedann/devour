@@ -55,6 +55,8 @@ const evnt7={
     StartTime: d6
 }
 const test = [evnt2, evnt3, evnt1, evnt4, evnt5, evnt6, evnt7];
+
+//the gatherings page
 export default class Gatherings extends React.Component {
     constructor(props) {
         super(props)

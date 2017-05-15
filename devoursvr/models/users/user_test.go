@@ -9,7 +9,7 @@ func createNewUser() *NewUser {
 		Email:        "test@test.com",
 		Password:     "password",
 		PasswordConf: "password",
-		DOB:          "10/10/1990",
+		UserName:     "mrtester",
 		FirstName:    "test",
 		LastName:     "tester",
 	}

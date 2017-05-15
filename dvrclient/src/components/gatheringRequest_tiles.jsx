@@ -1,6 +1,7 @@
 import React from "react"
 import {TitleWrap} from "./gathering_tiles.jsx"
 
+//this is the list of event requests
 export default class GRequestsList extends React.Component {
     constructor(props) {
         super(props)
@@ -30,6 +31,7 @@ export default class GRequestsList extends React.Component {
         })
     }
 
+    //renders the title and the tiles
     render() {
         return(
             <TitleWrap key="requests" titleName="requests" arr={this.state.events} request={true}/>

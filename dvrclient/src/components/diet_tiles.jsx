@@ -1,5 +1,6 @@
 import React from "react";
 
+//The card tiles displayed on the survey pages
 export default class DietTile extends React.Component {
     constructor(props) {
         super(props)
@@ -8,7 +9,8 @@ export default class DietTile extends React.Component {
         }
     }
 
-    
+    //changes the background color of the tile to change on click
+    //TODO: add the diets contained in selected to the postgres database
     clickAction(e) {
         e.preventDefault()
         var target = e.currentTarget;
@@ -26,9 +28,10 @@ export default class DietTile extends React.Component {
         this.setState({
             selected: selectedHolder
         })
-        // TODO: add redux to save all selections for diets
     }
 
+    //Everything should be 2 tile width on mobile screens since we have an odd number
+    //mdl does not support 3x3 on mobile
     render() {
         if (this.props.title === "Everything") {
             return (

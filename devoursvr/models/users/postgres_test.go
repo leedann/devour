@@ -108,5 +108,6 @@ func TestPostgresStore(t *testing.T) {
 	if all[0].ID != user.ID {
 		t.Errorf("ID of user retrieved by all does not match: expected %s but got %s\n", user.ID, all[0].ID)
 	}
+
 	_, err = psdb.Exec("DELETE FROM users")
 }

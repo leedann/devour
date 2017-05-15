@@ -9,7 +9,7 @@ export default class SurveyAllergies extends React.Component {
     }
 
     render() {
-        //test array
+        //testing for allergies-- will have to get the most popular allergies from yummly
         var allergies = ["Nothing", "Nuts", "Gluten", "Mushrooms", "Shellfish", "Fish", "Dairy", "Corn", "Soy"]
         return(
             <Layout title="taste profile">

@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from 'react-router-dom';
 import {history} from './app.jsx'
 
+//Registration page
 export default class Register extends React.Component {
     constructor(props) {
         super(props);
@@ -15,6 +16,7 @@ export default class Register extends React.Component {
 
     }
 
+    //if the password does not match dont let register
     passwordMatch(e) {
         e.preventDefault()
         let pass1 = document.getElementById("pass");
@@ -30,9 +32,9 @@ export default class Register extends React.Component {
         }
     }
 
+    //handles submitting the registration
     handleSubmit(event) {
         event.preventDefault();
-        let username=document.getElementById("username").value
         let firstName=document.getElementById("firstName").value
         let lastName=document.getElementById("lastName").value
         let email=document.getElementById("email").value
@@ -48,11 +50,12 @@ export default class Register extends React.Component {
                 "FirstName": firstName,
                 "LastName": lastName
             }
-            //this is where you make that api call
+            //api post call to the users db
             if (data) {
 
             }
         }
+        //will need to move to end of successful api call
         history.push("/welcome");
     }
 
@@ -65,9 +68,6 @@ export default class Register extends React.Component {
                 <div className="mdl-card__supporting-text">
                     {this.state.errmess? <span className="errmess" id="errmess">{this.state.errmess}</span> : ""}
                     <form action="#">
-                        <div className="mdl-textfield mdl-js-textfield">
-                            <input className="mdl-textfield__input" type="text" id="username" placeholder="Username" required autoFocus/>
-                        </div>
                         <div className="mdl-textfield mdl-js-textfield">
                             <input className="mdl-textfield__input" type="text" id="firstName" placeholder="First Name" required autoFocus/>
                         </div>
