@@ -8,77 +8,92 @@ import (
 
 const longForm = "January 1, 2006 at 3:04PM (MST)"
 
-//EventID defines the type for any event id (type, mood, normal)
+// select eventtypedesc from event a inner join eventype b on a.eventtypeID = b.eventtypeID where a.descr = ""
+
+//EventID defines the primary key of the event
 type EventID interface{}
 
 //StatusID defines the type for any status ids (host, accept, reject)
 type StatusID interface{}
 
+//TypeID represents the primary key of the types of events
+type TypeID interface{}
+
+//MoodTypeID represents the primary key of the mood of the event
+type MoodTypeID interface{}
+
+//AttendanceID represents the primary key of the attendance of a event
+type AttendanceID interface{}
+
 //Event represents gathering information
 type Event struct {
-	EventID         EventID   `json:"eventID" bson:"_eventID"`
-	EventTypeID     EventID   `json:"eventTypeID"`
-	EventName       string    `json:"eventName"`
-	EventDesc       string    `json:"eventDesc"`
-	EventMoodTypeID EventID   `json:"eventMoodTypeID"`
-	EventStartTime  time.Time `json:"eventStartTime"`
-	EventEndTime    time.Time `json:"eventEndTime"`
+	ID          EventID      `json:"id" bson:"_id"`
+	TypeID      TypeID       `json:"typeID"`
+	CreatorID   users.UserID `json:"userID"`
+	Name        string       `json:"name"`
+	Description string       `json:"description,omitempty"`
+	MoodTypeID  MoodTypeID   `json:"moodTypeID"`
+	StartTime   time.Time    `json:"startAt"`
+	EndTime     time.Time    `json:"endAt"`
 }
 
 //NewEvent represents a new event-- recorder from user input
 type NewEvent struct {
-	EventName      string `json:"eventName"`
-	EventDesc      string `json:"eventDesc"`
-	EventStartTime string `json:"eventStartTime"`
-	EventEndTime   string `json:"eventEndTime"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	StartTime   time.Time `json:"startTime"`
+	EndTime     time.Time `json:"endTime"`
 }
 
 //EventType represents the type of events -- birthday, potluck, etc
 type EventType struct {
-	EventTypeID   EventID `json:"eventTypeID"`
-	EventTypeName string  `json:"eventTypeName"`
-	EventTypeDesc string  `json:"eventTypeDesc"`
+	ID          EventID `json:"id" bson:"_id"`
+	Name        string  `json:"typeName"`
+	Description string  `json:"typeDescription"`
 }
 
-//EventMoodType represents the mood for an event -- casual, formal etc
-type EventMoodType struct {
-	Email        string `json:"email"`
-	Password     string `json:"password"`
-	PasswordConf string `json:"passwordConf"`
-	DOB          string `json:"dob"`
-	FirstName    string `json:"firstName"`
-	LastName     string `json:"lastName"`
+//MoodType represents the mood for an event -- casual, formal etc
+type MoodType struct {
+	ID          MoodTypeID `json:"id" bson:"_id"`
+	Name        string     `json:"name"`
+	Description string     `json:"description"`
 }
 
-//EventAttendance represents the status of an individual at an event (host, accept, reject)
-type EventAttendance struct {
-	EventAttendanceID EventID      `json:"eventAttendanceID"`
-	EventID           EventID      `json:"eventID"`
-	UserID            users.UserID `json:"userID"`
-	StatusID          StatusID     `json:"statusID"`
+//Attendance represents the status of an individual at an event (host, accept, reject)
+type Attendance struct {
+	ID       AttendanceID `json:"id" bson:"_id"`
+	EventID  EventID      `json:"eventID"`
+	UserID   users.UserID `json:"userID"`
+	StatusID StatusID     `json:"statusID"`
 }
 
-//EventAttendanceStatus represents a type of status (accept, reject, host(s))
-type EventAttendanceStatus struct {
-	StatusID         StatusID `json:"statusID"`
+//AttendanceStatus represents a type of status (accept, reject, host(s))
+type AttendanceStatus struct {
+	ID               StatusID `json:"id" bson:"_id"`
 	AttendanceStatus string   `json:"attendanceStatus"`
 }
 
 //ToEvent takes a new event and adds all the necessary information to make an Event
-func (ne *NewEvent) ToEvent(eventType string, eventMood string, start string, end string) (*Event, error) {
+func (ne *NewEvent) ToEvent(eventType EventID, eventMood MoodTypeID, user users.UserID) (*Event, error) {
 	event := &Event{}
 	//date time has to be formatted exactly like longform
-	sTime, _ := time.Parse(longForm, start)
-	eTime, _ := time.Parse(longForm, end)
-	event.EventStartTime = sTime
-	event.EventEndTime = eTime
-	event.EventTypeID = eventType
-	event.EventMoodTypeID = eventMood
-	eventSetting(event, ne)
-	return event, nil
-}
 
-func eventSetting(e *Event, ne *NewEvent) {
-	e.EventName = ne.EventName
-	e.EventDesc = ne.EventDesc
+	start := ne.StartTime.Format(longForm)
+	end := ne.EndTime.Format(longForm)
+	nStart, err := time.Parse(longForm, start)
+	if err != nil {
+		return nil, err
+	}
+	nEnd, err := time.Parse(longForm, end)
+	if err != nil {
+		return nil, err
+	}
+	event.StartTime = nStart
+	event.EndTime = nEnd
+	event.Name = ne.Name
+	event.Description = ne.Description
+	event.MoodTypeID = eventMood
+	event.TypeID = eventType
+	event.CreatorID = user
+	return event, nil
 }
