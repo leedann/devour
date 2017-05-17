@@ -16,7 +16,10 @@ var evnt2={
     Description: "Come hang out at my house! No need to bring anything",
     Hosting: false,
     Time: "6:00pm",
-    StartTime: d2
+    StartTime: d2,
+    EndTime: d2,
+    EventType: "Business",
+    MoodType: "Casual",
 }
 //testing the images of who is going
 var going=["https://www.gravatar.com/avatar/0e58cf2f03c9a0a5d6965154837cd595", "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50"]

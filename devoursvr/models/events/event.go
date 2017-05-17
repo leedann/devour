@@ -43,6 +43,8 @@ type NewEvent struct {
 	Description string    `json:"description"`
 	StartTime   time.Time `json:"startTime"`
 	EndTime     time.Time `json:"endTime"`
+	EventType   string    `json:"type"`
+	MoodType    string    `json:"mood"`
 }
 
 //EventType represents the type of events -- birthday, potluck, etc
@@ -74,7 +76,7 @@ type AttendanceStatus struct {
 }
 
 //ToEvent takes a new event and adds all the necessary information to make an Event
-func (ne *NewEvent) ToEvent(eventType EventID, eventMood MoodTypeID, user users.UserID) (*Event, error) {
+func (ne *NewEvent) ToEvent(eventType TypeID, eventMood MoodTypeID, user users.UserID) (*Event, error) {
 	event := &Event{}
 	//date time has to be formatted exactly like longform
 
@@ -97,3 +99,20 @@ func (ne *NewEvent) ToEvent(eventType EventID, eventMood MoodTypeID, user users.
 	event.CreatorID = user
 	return event, nil
 }
+
+// go in and search for event id by name and mood id by name
+// insert the event to the database
+// returns an event
+// using event.EventTypeID and event.MoodTypeID --> sql calls get by ID for each
+// construct JSON with those values
+// var evnt2={
+// id: 2,
+// Name: "Dinner at Danny's",
+// Description: "Come hang out at my house! No need to bring anything",
+// Hosting: false,
+// Time: "6:00pm",
+// StartTime: d2,
+// EndTime: d2,
+// EventType: "Business",
+// MoodType: "Casual",
+// }

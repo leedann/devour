@@ -34,7 +34,7 @@ func (ps *PGStore) InsertEvent(newEvent *NewEvent, creator *users.UserID, eventT
 		return nil, err
 	}
 	sql := `INSERT INTO events (EventTypeID, Name, Description, MoodTypeID, StartTime, EndTime) VALUES ($1, $2, $3, $4, $5, $6) returning id`
-	row := tx.QueryRow(sql, evt.TypeID, evt.Name, evt.Description, evt.MoodTypeID, evt.StartTime, evt.EndTime)
+	row := tx.QueryRow(sql, eType.ID, evt.Name, evt.Description, mood.ID, evt.StartTime, evt.EndTime)
 	err = row.Scan(&evt.ID)
 	if err != nil {
 		tx.Rollback()
@@ -44,20 +44,20 @@ func (ps *PGStore) InsertEvent(newEvent *NewEvent, creator *users.UserID, eventT
 	return evt, err
 }
 
-//GetTypeByName receives the type name and returns the whole type
-func (ps *PGStore) GetTypeByName(eventType string) (*EventType, error) {
+//GetTypeByID receives the type name and returns the whole type
+func (ps *PGStore) GetTypeByID(eventType string) (*EventType, error) {
 	var evtType = &EventType{}
-	err := ps.DB.QueryRow(`SELECT * FROM event_type WHERE Name = $1`, eventType).Scan(&evtType.ID, &evtType.Name, &evtType.Description)
+	err := ps.DB.QueryRow(`SELECT ID FROM event_type WHERE Name = $1`, eventType).Scan(&evtType.ID, &evtType.Name, &evtType.Description)
 	if err == sql.ErrNoRows || err != nil {
 		return nil, err
 	}
 	return evtType, nil
 }
 
-//GetMoodByName gets the mood type and returns the whole type
-func (ps *PGStore) GetMoodByName(moodName string) (*MoodType, error) {
+//GetMoodByID gets the mood type and returns the whole type
+func (ps *PGStore) GetMoodByID(moodName string) (*MoodType, error) {
 	var moodType = &MoodType{}
-	err := ps.DB.QueryRow(`SELECT * FROM event_mood_type WHERE Name = $1`, moodName).Scan(&moodType.ID, &moodType.Name, &moodType.Description)
+	err := ps.DB.QueryRow(`SELECT ID FROM event_mood_type WHERE Name = $1`, moodName).Scan(&moodType.ID, &moodType.Name, &moodType.Description)
 	if err == sql.ErrNoRows || err != nil {
 		return nil, err
 	}
