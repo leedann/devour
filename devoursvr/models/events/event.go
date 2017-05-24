@@ -3,10 +3,10 @@ package events
 import (
 	"time"
 
-	"github.com/info344-s17/challenges-leedann/apiserver/models/users"
+	"github.com/leedann/devour/devoursvr/models/users"
 )
 
-const longForm = "January 1, 2006 at 3:04PM (MST)"
+const longForm = "January 2, 2006 at 3:04pm (MST)"
 
 // select eventtypedesc from event a inner join eventype b on a.eventtypeID = b.eventtypeID where a.descr = ""
 
@@ -25,26 +25,36 @@ type MoodTypeID interface{}
 //AttendanceID represents the primary key of the attendance of a event
 type AttendanceID interface{}
 
+//SuggestionID represents the primary key of the suggestion of a recipe for an event
+type SuggestionID interface{}
+
+//RecipeSuggest shows who suggested which recipe
+type RecipeSuggest struct {
+	ID      SuggestionID `json:"id" bson:"_id"`
+	EventID EventID      `json:"eventid"`
+	UserID  users.UserID `json:"userId"`
+	Recipe  string       `json:"recipeName"`
+}
+
 //Event represents gathering information
 type Event struct {
-	ID          EventID      `json:"id" bson:"_id"`
-	TypeID      TypeID       `json:"typeID"`
-	CreatorID   users.UserID `json:"userID"`
-	Name        string       `json:"name"`
-	Description string       `json:"description,omitempty"`
-	MoodTypeID  MoodTypeID   `json:"moodTypeID"`
-	StartTime   time.Time    `json:"startAt"`
-	EndTime     time.Time    `json:"endAt"`
+	ID          EventID    `json:"id" bson:"_id"`
+	TypeID      TypeID     `json:"typeID"`
+	Name        string     `json:"name"`
+	Description string     `json:"description,omitempty"`
+	MoodTypeID  MoodTypeID `json:"moodTypeID"`
+	StartTime   time.Time  `json:"startAt"`
+	EndTime     time.Time  `json:"endAt"`
 }
 
 //NewEvent represents a new event-- recorder from user input
 type NewEvent struct {
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	StartTime   time.Time `json:"startTime"`
-	EndTime     time.Time `json:"endTime"`
-	EventType   string    `json:"type"`
-	MoodType    string    `json:"mood"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	StartTime   string `json:"startTime"`
+	EndTime     string `json:"endTime"`
+	EventType   string `json:"type"`
+	MoodType    string `json:"mood"`
 }
 
 //EventType represents the type of events -- birthday, potluck, etc
@@ -80,13 +90,11 @@ func (ne *NewEvent) ToEvent(eventType TypeID, eventMood MoodTypeID, user users.U
 	event := &Event{}
 	//date time has to be formatted exactly like longform
 
-	start := ne.StartTime.Format(longForm)
-	end := ne.EndTime.Format(longForm)
-	nStart, err := time.Parse(longForm, start)
+	nStart, err := time.Parse(longForm, ne.StartTime)
 	if err != nil {
 		return nil, err
 	}
-	nEnd, err := time.Parse(longForm, end)
+	nEnd, err := time.Parse(longForm, ne.EndTime)
 	if err != nil {
 		return nil, err
 	}
@@ -96,7 +104,6 @@ func (ne *NewEvent) ToEvent(eventType TypeID, eventMood MoodTypeID, user users.U
 	event.Description = ne.Description
 	event.MoodTypeID = eventMood
 	event.TypeID = eventType
-	event.CreatorID = user
 	return event, nil
 }
 

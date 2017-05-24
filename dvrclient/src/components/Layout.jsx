@@ -1,7 +1,6 @@
 import React from "react";
 import Header from "./Header.jsx";
 import Footer from "./Footer.jsx";
-
 const homeIcons=["shopping_cart", "settings", "info"];
 const eventFooter=["Upcoming", "Past"];
 const recipeIcons=["search", "filter"];
@@ -21,7 +20,6 @@ export default class Layout extends React.Component {
             footNames: ""
         }
     }
-
     componentDidMount() {
     }
 

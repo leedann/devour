@@ -1,7 +1,7 @@
 import React from "react"
 import Layout from "./Layout.jsx";
 import GatheringList from "./gathering_tiles.jsx";
-import moment from "moment";
+// import moment from "moment";
 
 //TODO:
 // the views will change from past to upcoming-- need to get events and sort events

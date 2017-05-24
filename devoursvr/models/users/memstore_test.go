@@ -6,7 +6,6 @@ func TestMemStore(t *testing.T) {
 	store := NewMemStore()
 	nu := &NewUser{
 		Email:        "test@test.com",
-		UserName:     "tester",
 		FirstName:    "Test",
 		LastName:     "Tester",
 		Password:     "password",
@@ -42,14 +41,6 @@ func TestMemStore(t *testing.T) {
 	}
 	if u2.ID != u.ID {
 		t.Errorf("ID of user fetched by email didn't match: expected %s but got %s\n", u.ID, u2.ID)
-	}
-
-	u2, err = store.GetByUserName(nu.UserName)
-	if err != nil {
-		t.Errorf("error getting new user by user name: %v\n", err)
-	}
-	if u2.ID != u.ID {
-		t.Errorf("ID of user fetched by name didn't match: expected %s but got %s\n", u.ID, u2.ID)
 	}
 
 	all, err := store.GetAll()

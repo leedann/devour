@@ -1,4 +1,5 @@
 import React from "react"
+//this is deprecated
 import Textfield from 'react-mdl/lib/Textfield';
 import Layout from "./Layout.jsx";
 

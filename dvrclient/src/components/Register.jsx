@@ -40,6 +40,7 @@ export default class Register extends React.Component {
         let email=document.getElementById("email").value
         let password=document.getElementById("pass").value
         let passconf=document.getElementById("pass2").value
+        let username = "";
         //if passwords are matching, POST to the url
         if (!this.state.passMatch) {
             var data = {

@@ -13,7 +13,7 @@ $textSize: 20px;
     max-width: 350px;
     @media (min-width: 841px) {
         height: 300px;
-        max-width: 35vw;
+        max-width: 36vw;
     }
 }
 
@@ -32,8 +32,15 @@ $textSize: 20px;
     justify-content: flex-end;
 }
 .recipeName {
-    font-size: 1.25em;
+    padding-top: 3px;
+    padding-left: 10px;
+    margin: 0;
+    max-height: 20px;
+    font-size: 1em;
     fill: $lightblack;
+}
+.recipeActions > .material-icons {
+    padding-bottom: 0;
 }
 
 .favButton {
@@ -60,5 +67,10 @@ $textSize: 20px;
 }
 
 .recipeInfo {
-    overflow-y: scroll
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.recipeList {
+    padding-left: 5px;
 }

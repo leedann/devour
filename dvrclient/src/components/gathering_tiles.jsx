@@ -99,6 +99,7 @@ export class TitleWrap extends React.Component {
             case "accept":
                     target.style.color="#4CAF50";
                     data.message = "Event accepted!"
+                    console.log(snackbarContainer.MaterialSnackbar)
                     snackbarContainer.MaterialSnackbar.showSnackbar(data);
                 break;
             case "reject":
@@ -112,7 +113,7 @@ export class TitleWrap extends React.Component {
         //temporary remove -- will need to remove from api then 
         var newArr = this.state.arr;
         newArr = newArr.filter(obj => {
-            return obj.id != targetID
+            return obj.id !== targetID
         })
         this.setState({
             arr: newArr
