@@ -32,6 +32,12 @@ type Store interface {
 	//Gets the corresponding Allergy type by the name
 	GetAllergyByName(allergyName string) (*AllergyType, error)
 
+	//Gets the corresponding diet type by the id
+	GetDietByID(id DietTypeID) (*DietType, error)
+
+	//Gets the corresponding Allergy type by the id
+	GetAllergyByID(id AllergyTypeID) (*AllergyType, error)
+
 	//Gets all of the allergies that the user has
 	GetUserAllergy(user *User) ([]*UserAllergyType, error)
 
@@ -42,16 +48,16 @@ type Store interface {
 	InsertDiet(user *User, dietNames []string) ([]*Diet, error)
 
 	//Adds a single Diet to the user
-	AddDiet(user *User, diet string)
+	AddDiet(user *User, diet string) (*Diet, error)
 
 	//Adds a single Allergy to the user
-	AddAllergy(user *User, allergyName string)
+	AddAllergy(user *User, allergyName string) (*UserAllergyType, error)
 
 	//Removes an allergy from the user
-	RemoveAllergy(user *User, allergyName string)
+	RemoveAllergy(user *User, allergyName string) error
 
 	//Removes a diet from the user
-	RemoveDiet(user *User, dietName string)
+	RemoveDiet(user *User, dietName string) error
 
 	//Inserts allergies of the user
 	InsertAllergies(user *User, allergyNames []string) ([]*UserAllergyType, error)
@@ -72,26 +78,26 @@ type Store interface {
 	InsertGroceryList(user *User, list []string) (*GroceryList, error)
 
 	//Adds an item to the grocery list
-	AddToGrocery(user *User, ingredient string)
+	AddToGrocery(user *User, ingredient string) error
 
 	//Deletes an item from the grocery list
-	DeleteFromGrocery(user *User, ingredient string)
+	DeleteFromGrocery(user *User, ingredient string) error
 
 	//Adds a friend
-	AddFriend(user *User, friend *User)
+	AddFriend(user *User, friend *User) (*FriendsList, error)
 
 	//Adds a friend as a favorite
-	AddFavFriend(user *User, friend *User)
+	AddFavFriend(user *User, friend *User) error
 
 	//Gets the user's friends list
-	GetUserFriendsList(user *User)
+	GetUserFriendsList(user *User) ([]*FriendsList, error)
 
 	//Gets all of the users favorite friends
-	GetUserFavFriends(user *User)
+	GetUserFavFriends(user *User) ([]*FriendsList, error)
 
 	//Deletes a friend from the friends list
-	DeleteFriend(user *User, friend *User)
+	DeleteFriend(user *User, friend *User) error
 
 	//Removes a friend from the friend list
-	RemoveFavFriend(user *User, friend *User)
+	RemoveFavFriend(user *User, friend *User) error
 }

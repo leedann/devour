@@ -22,10 +22,30 @@ func (ps *PGStore) GetDietByName(dietName string) (*DietType, error) {
 	return dietType, nil
 }
 
+//GetDietByID returns the users diet by the id
+func (ps *PGStore) GetDietByID(id DietTypeID) (*DietType, error) {
+	var dietType = &DietType{}
+	err := ps.DB.QueryRow(`SELECT * FROM diet_type WHERE id = $1`, id).Scan(&dietType.ID, &dietType.Name, &dietType.Description)
+	if err == sql.ErrNoRows || err != nil {
+		return nil, err
+	}
+	return dietType, nil
+}
+
 //GetAllergyByName gets all of the allergies of the users by name
 func (ps *PGStore) GetAllergyByName(allergyName string) (*AllergyType, error) {
 	var allergyType = &AllergyType{}
 	err := ps.DB.QueryRow(`SELECT * FROM allergy_type WHERE Name = $1`, allergyName).Scan(&allergyType.ID, &allergyType.Name, &allergyType.Description)
+	if err == sql.ErrNoRows || err != nil {
+		return nil, err
+	}
+	return allergyType, nil
+}
+
+//GetAllergyByID returns the users allergy by the id
+func (ps *PGStore) GetAllergyByID(id AllergyTypeID) (*AllergyType, error) {
+	var allergyType = &AllergyType{}
+	err := ps.DB.QueryRow(`SELECT * FROM allergy_type WHERE id = $1`, id).Scan(&allergyType.ID, &allergyType.Name, &allergyType.Description)
 	if err == sql.ErrNoRows || err != nil {
 		return nil, err
 	}
@@ -267,8 +287,8 @@ func (ps *PGStore) GetUserGroceries(user *User) (*GroceryList, error) {
 	return gList, nil
 }
 
-//GetUserFavorite returns all of the user's favorites
-func (ps *PGStore) GetUserFavorite(user *User) (*UserLikesList, error) {
+//GetUserBook returns all of the user's favorites
+func (ps *PGStore) GetUserBook(user *User) (*UserLikesList, error) {
 	var ulList = &UserLikesList{}
 	var recipes string
 	var recipesarr []string

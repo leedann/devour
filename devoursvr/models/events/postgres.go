@@ -326,6 +326,14 @@ func (ps *PGStore) DeleteEvent(event *Event) error {
 		tx.Rollback()
 		return err
 	}
+	//deleting recipes
+	//have to delete recipes first because they reference the event
+	sql = `DELETE FROM recipe_suggestions USING events WHERE recipe_suggestions.EventID = $1`
+	_, err = tx.Exec(sql, event.ID)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
 	sql = `DELETE FROM events WHERE ID = $1`
 	//executes the sql query
 	_, err = tx.Exec(sql, event.ID)
@@ -365,6 +373,7 @@ func (ps *PGStore) AddRecipeToEvent(event *Event, user *users.User, recipe strin
 	var suggestion = &RecipeSuggest{}
 	suggestion.EventID = event.ID
 	suggestion.UserID = user.ID
+	suggestion.Recipe = recipe
 	//start a transaction
 	tx, err := ps.DB.Begin()
 	//err if transaction could not start
@@ -394,8 +403,7 @@ func (ps *PGStore) RemoveRecipeFromEvent(event *Event, user *users.User, recipe 
 	if err != nil {
 		return err
 	}
-
-	sql := `DELETE FROM recipe_suggestions WHERE EventID = $1 AND UserID = $2 AND Recipe = $1`
+	sql := `DELETE FROM recipe_suggestions WHERE EventID = $1 AND UserID = $2 AND Recipe = $3`
 	//executes the sql query
 	_, err = tx.Exec(sql, event.ID, user.ID, recipe)
 	//err if could not exec, rollback transaction
@@ -408,11 +416,43 @@ func (ps *PGStore) RemoveRecipeFromEvent(event *Event, user *users.User, recipe 
 	return nil
 }
 
+//GetAllRecipesInEvent gets all the recipes in a particular event
+func (ps *PGStore) GetAllRecipesInEvent(event *Event) ([]string, error) {
+	var allRecipes []string
+	rows, err := ps.DB.Query(`
+	SELECT recipe 
+	FROM recipe_suggestions
+	WHERE EventID = $1`, event.ID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	//Next refers to the first row initially
+	//returns false once EOF
+	for rows.Next() {
+		var recipe = ""
+
+		//scans values into User struct; error returned if scan unsuccessful
+		if err := rows.Scan(&recipe); err != nil {
+			return nil, err
+		}
+
+		//adds to array
+		allRecipes = append(allRecipes, recipe)
+	}
+	//error is returned if encountered during iteration
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+	return allRecipes, nil
+}
+
 //GetAllUsersInEvent gets all the users that are attending a particular event -- comes back as a slice of users
 func (ps *PGStore) GetAllUsersInEvent(event *Event) ([]*users.User, error) {
 	var allUsers []*users.User
 	rows, err := ps.DB.Query(`
-	SELECT U.ID, U.PhotoURL 
+	SELECT U.ID, U.FirstName, U.LastName, U.PhotoURL 
 	FROM event_attendance E 
 	INNER JOIN Users U ON E.UserID = U.ID 
 	WHERE E.EventID = $1`, event.ID)
@@ -426,7 +466,7 @@ func (ps *PGStore) GetAllUsersInEvent(event *Event) ([]*users.User, error) {
 		var usr = &users.User{}
 
 		//scans values into User struct; error returned if scan unsuccessful
-		if err := rows.Scan(&usr.ID, &usr.PhotoURL); err != nil {
+		if err := rows.Scan(&usr.ID, &usr.FirstName, &usr.LastName, &usr.PhotoURL); err != nil {
 			return nil, err
 		}
 
@@ -480,7 +520,7 @@ func (ps *PGStore) GetAllPendingEvents(user *users.User) ([]*Event, error) {
 func (ps *PGStore) GetPastEvents(user *users.User) ([]*Event, error) {
 	var allEvts []*Event
 	rows, err := ps.DB.Query(`
-	SELECT C.ID, C.EventTypeID, C.CreatorID, C.Name, C.Description, C.MoodTypeID, C.StartTime, C.EndTime
+	SELECT C.ID, C.EventTypeID, C.Name, C.Description, C.MoodTypeID, C.StartTime, C.EndTime
 	FROM users A 
 	INNER JOIN event_attendance B ON A.ID = B.UserID
 	INNER JOIN events C ON B.EventID = C.ID
@@ -517,7 +557,7 @@ func (ps *PGStore) GetPastEvents(user *users.User) ([]*Event, error) {
 func (ps *PGStore) GetUpcomingEvents(user *users.User) ([]*Event, error) {
 	var allEvts []*Event
 	rows, err := ps.DB.Query(`
-	SELECT C.ID, C.EventTypeID, C.CreatorID, C.Name, C.Description, C.MoodTypeID, C.StartTime, C.EndTime
+	SELECT C.ID, C.EventTypeID, C.Name, C.Description, C.MoodTypeID, C.StartTime, C.EndTime
 	FROM users A 
 	INNER JOIN event_attendance B ON A.ID = B.UserID
 	INNER JOIN events C ON B.EventID = C.ID
@@ -624,7 +664,7 @@ func (ps *PGStore) GetAllUserEvents(user *users.User) ([]*Event, error) {
 func (ps *PGStore) GetAllFriendsInEvent(user *users.User, event *Event) ([]*users.User, error) {
 	var allUsers []*users.User
 	rows, err := ps.DB.Query(`
-	SELECT U.ID, U.PhotoURL FROM event_attendance E 
+	SELECT U.ID, U.FirstName, U.LastName, U.PhotoURL FROM event_attendance E 
 	INNER JOIN Users U ON E.UserID = U.ID 
 	INNER JOIN friends_list F ON U.ID = F.UserID 
 	WHERE E.EventID = $1 AND F.UserID = $2`, event.ID, user.ID)
@@ -638,7 +678,7 @@ func (ps *PGStore) GetAllFriendsInEvent(user *users.User, event *Event) ([]*user
 		var usr = &users.User{}
 
 		//scans values into User struct; error returned if scan unsuccessful
-		if err := rows.Scan(&usr.ID, &usr.PhotoURL); err != nil {
+		if err := rows.Scan(&usr.ID, &usr.FirstName, &usr.LastName, &usr.PhotoURL); err != nil {
 			return nil, err
 		}
 

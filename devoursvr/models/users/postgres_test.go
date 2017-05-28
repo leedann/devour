@@ -231,7 +231,7 @@ func TestPostgresStore(t *testing.T) {
 		t.Errorf("error getting user grocery list %v\n", err)
 	}
 
-	_, err = store.GetUserFavorite(user)
+	_, err = store.GetUserBook(user)
 	if err != nil {
 		t.Errorf("error getting user favorites %v\n", err)
 	}

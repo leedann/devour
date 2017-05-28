@@ -12,11 +12,10 @@ import (
 
 	"strings"
 
-	"github.com/info344-s17/challenges-leedann/apiserver/handlers"
-	"github.com/info344-s17/challenges-leedann/apiserver/middleware"
-	"github.com/info344-s17/challenges-leedann/apiserver/models/messages"
-	"github.com/info344-s17/challenges-leedann/apiserver/models/users"
-	"github.com/info344-s17/challenges-leedann/apiserver/sessions"
+	"github.com/leedann/devour/devoursvr/handlers"
+	"github.com/leedann/devour/devoursvr/middleware"
+	"github.com/leedann/devour/devoursvr/models/users"
+	"github.com/leedann/devour/devoursvr/sessions"
 	_ "github.com/lib/pq"
 )
 
@@ -33,6 +32,11 @@ const (
 	channels   = "channels"
 	specific   = "/"
 	msgs       = "messages"
+	diets      = "/diets"
+	allergies  = "/allergies"
+	friends    = "/friends"
+	recipebook = "/recipebook"
+	favorites  = "/favorites"
 )
 
 //main is the main entry point for this program
@@ -65,19 +69,23 @@ func main() {
 	pgstore, err := sql.Open("postgres", datasrcName)
 
 	_, err = pgstore.Exec("DELETE FROM users")
-	_, err = pgstore.Exec("DELETE FROM channels")
-	_, err = pgstore.Exec("DELETE FROM messages")
+	_, err = pgstore.Exec("DELETE FROM user_diet_type")
+	_, err = pgstore.Exec("DELETE FROM user_allergy_type")
+	_, err = pgstore.Exec("DELETE FROM grocery_list")
+	_, err = pgstore.Exec("DELETE FROM user_like_list")
+	_, err = pgstore.Exec("DELETE FROM friends_list")
 	_, err = pgstore.Exec("ALTER SEQUENCE users_id_seq RESTART")
-	_, err = pgstore.Exec("ALTER SEQUENCE channels_id_seq RESTART")
-	_, err = pgstore.Exec("ALTER SEQUENCE messages_id_seq RESTART")
+	_, err = pgstore.Exec("ALTER SEQUENCE user_diet_type_id_seq RESTART")
+	_, err = pgstore.Exec("ALTER SEQUENCE user_allergy_type_id_seq RESTART")
+	_, err = pgstore.Exec("ALTER SEQUENCE grocery_list_id_seq RESTART")
+	_, err = pgstore.Exec("ALTER SEQUENCE user_like_list_id_seq RESTART")
+	_, err = pgstore.Exec("ALTER SEQUENCE friends_list_id_seq RESTART")
 
 	if err != nil {
 		log.Fatalf("error starting db: %v", err)
 	}
+
 	usrStore := &users.PGStore{
-		DB: pgstore,
-	}
-	msgStore := &messages.PGStore{
 		DB: pgstore,
 	}
 	//Pings the DB-- establishes a connection to the db
@@ -92,34 +100,23 @@ func main() {
 		SessionKey:   SESSIONKEY,
 		SessionStore: redisStore,
 		UserStore:    usrStore,
-		MessageStore: msgStore,
 	}
-
-	gen := &messages.NewChannel{
-		Name:        "General",
-		Description: "General channel",
-		Private:     false,
-	}
-	newUser := &users.NewUser{
-		Email:        "general@tso.com",
-		Password:     "chicken",
-		PasswordConf: "chicken",
-		UserName:     "GeneralAdmin",
-		FirstName:    "Gen",
-		LastName:     "Gin",
-	}
-	user, _ := ctx.UserStore.Insert(newUser)
-	ctx.MessageStore.InsertChannel(gen, &user.ID)
 
 	mux := http.NewServeMux()
 	mux.HandleFunc(apiRoot+usr, ctx.UserHandler)
 	mux.HandleFunc(apiRoot+sess, ctx.SessionsHandler)
 	mux.HandleFunc(apiRoot+sessme, ctx.SessionsMineHandler)
 	mux.HandleFunc(apiRoot+usrme, ctx.UsersMeHandler)
-	mux.HandleFunc(apiRoot+channels, ctx.ChannelsHandler)
-	mux.HandleFunc(apiRoot+channels+specific, ctx.SpecificChannelHandler)
-	mux.HandleFunc(apiRoot+msgs, ctx.MessagesHandler)
-	mux.HandleFunc(apiRoot+msgs+specific, ctx.SpecificMessageHandler)
+	mux.HandleFunc(apiRoot+usr+diets, ctx.UserDietHandler)
+	mux.HandleFunc(apiRoot+usr+allergies, ctx.UserAllergyHandler)
+	mux.HandleFunc(apiRoot+usr+friends, ctx.UserFriendsHandler)
+	mux.HandleFunc(apiRoot+usr+recipebook, ctx.UserRecipesHandler)
+	mux.HandleFunc(apiRoot+usr+favorites, ctx.UserFavoritesHandler)
+	mux.HandleFunc(apiRoot+usr+diets+specific, ctx.SpecificDietHandler)
+	mux.HandleFunc(apiRoot+usr+allergies+specific, ctx.SpecificAllergyHandler)
+	mux.HandleFunc(apiRoot+usr+friends+specific, ctx.SpecificFriendHandler)
+	mux.HandleFunc(apiRoot+usr+recipebook+specific, ctx.SpecificFavRecipeHandler)
+	mux.HandleFunc(apiRoot+usr+favorites+specific, ctx.SpecificFavFriendHandler)
 	mux.HandleFunc(apiSummary, handlers.SummaryHandler)
 	http.Handle(apiRoot, middleware.Adapt(mux, middleware.CORS("", "", "", "")))
 

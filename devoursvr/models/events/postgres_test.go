@@ -2,7 +2,6 @@ package events
 
 import (
 	"database/sql"
-	"fmt"
 	"testing"
 
 	"github.com/leedann/devour/devoursvr/models/users"
@@ -11,8 +10,7 @@ import (
 )
 
 type AllStores struct {
-	MessageStore Store
-	UserStore    users.Store
+	UserStore users.Store
 }
 
 //TestPostgresStore tests the dockerized PGStore
@@ -62,6 +60,7 @@ func TestPostgresStore(t *testing.T) {
 	_, err = psdb.Exec("ALTER SEQUENCE friends_list_id_seq RESTART")
 	_, err = psdb.Exec("ALTER SEQUENCE event_attendance_id_seq RESTART")
 	_, err = psdb.Exec("ALTER SEQUENCE events_id_seq RESTART")
+	_, err = psdb.Exec("ALTER SEQUENCE recipe_suggestions_id_seq RESTART")
 	_, err = psdb.Exec("DELETE FROM users")
 	_, err = psdb.Exec("DELETE FROM user_diet_type")
 	_, err = psdb.Exec("DELETE FROM user_allergy_type")
@@ -70,6 +69,7 @@ func TestPostgresStore(t *testing.T) {
 	_, err = psdb.Exec("DELETE FROM friends_list")
 	_, err = psdb.Exec("DELETE FROM event_attendance")
 	_, err = psdb.Exec("DELETE FROM events")
+	_, err = psdb.Exec("DELETE FROM recipe_suggestions")
 
 	//start of insert
 	user, err := usrStore.Insert(newUser)
@@ -98,6 +98,14 @@ func TestPostgresStore(t *testing.T) {
 		EventType:   "Formal",
 		MoodType:    "Fancy",
 	}
+	newJuneEvt := &NewEvent{
+		Name:        "testFutureEVENT",
+		Description: "testFutureDescription",
+		StartTime:   "June 5, 2017 at 4:00pm (PST)",
+		EndTime:     "June 5, 2017 at 7:00pm (PST)",
+		EventType:   "Formal",
+		MoodType:    "Fancy",
+	}
 
 	//insert event
 	evt, err := store.InsertEvent(newEvt, user)
@@ -106,6 +114,11 @@ func TestPostgresStore(t *testing.T) {
 	}
 	if evt.Name != "testEVENT" {
 		t.Errorf("error making event expected creator %s but got %s", "testEvent", evt.Name)
+	}
+
+	evt2, err := store.InsertEvent(newJuneEvt, user)
+	if err != nil {
+		t.Errorf("error inserting new event %v\n", err)
 	}
 
 	//invite user to the event
@@ -128,6 +141,18 @@ func TestPostgresStore(t *testing.T) {
 		t.Errorf("Error getting the correct attendance status ID expected %d but got %d", atn.StatusID, atnStat.ID)
 	}
 
+	//Lets first reject that invite
+	err = store.RejectInvite(evt, user2)
+	if err != nil {
+		t.Errorf("Error rejecting the invite %v\n", err)
+	}
+
+	//Now invite the user again
+	atn, err = store.InviteUserToEvent(user2, evt)
+	if err != nil {
+		t.Errorf("error inviting user to event %v\n", err)
+	}
+
 	//Updating attendance status
 	err = store.UpdateAttendanceStatus(user2, evt, "Attending")
 	if err != nil {
@@ -142,7 +167,12 @@ func TestPostgresStore(t *testing.T) {
 	if atnStat.AttendanceStatus != "Attending" {
 		t.Errorf("Error getting the correct UPDATED status: expected Attending but got %s", atnStat.AttendanceStatus)
 	}
-	fmt.Println(evt)
+
+	//Updating attendance status
+	err = store.UpdateAttendanceStatus(user2, evt, "Pending")
+	if err != nil {
+		t.Errorf("Error getting an updated attendance status")
+	}
 
 	//updating event stuff
 	err = store.UpdateEventName(evt, "UpdatedTestName")
@@ -183,6 +213,84 @@ func TestPostgresStore(t *testing.T) {
 		t.Errorf("Error updating stuffs %v", err)
 	}
 
+	//Adding a Recipe to an event, recipes are strings
+	RecipeName := "French-Onion-Soup"
+
+	//Adding two recipes into event
+	sugg, err := store.AddRecipeToEvent(evt, user, RecipeName)
+	if err != nil {
+		t.Errorf("Error adding recipe to an event: %v\n", err)
+	}
+	_, err = store.AddRecipeToEvent(evt, user2, RecipeName)
+	if err != nil {
+		t.Errorf("Error adding recipe to an event: %v\n", err)
+	}
+
+	//Getting all recipes in event
+	recipes, err := store.GetAllRecipesInEvent(evt)
+	if err != nil {
+		t.Errorf("Error getting all recipes in an event: %v\n", err)
+	}
+	if recipes[0] != sugg.Recipe {
+		t.Errorf("Error with getting recipes expected %s but got %s", sugg.Recipe, recipes[0])
+	}
+
+	//Removing user2's recipe from the event
+	err = store.RemoveRecipeFromEvent(evt, user2, RecipeName)
+	if err != nil {
+		t.Errorf("Error deleting recipe from the event: %v\n", err)
+	}
+
+	//Getting all of the users in the event
+	_, err = store.GetAllUsersInEvent(evt)
+	if err != nil {
+		t.Errorf("Error getting all users %v\n", err)
+	}
+
+	//Gets all pending events that a user has
+	pendingEvts, err := store.GetAllPendingEvents(user2)
+	if err != nil {
+		t.Errorf("Error getting all pending events: %v\n", err)
+	}
+	if pendingEvts[0].ID != evt.ID {
+		t.Errorf("Error getting the correct event: expected %d and got %d", pendingEvts[0].ID, evt.ID)
+	}
+
+	//Getting past and upcoming events
+	pastEvts, err := store.GetPastEvents(user)
+	if err != nil {
+		t.Errorf("Error getting past events %v\n", err)
+	}
+	upcomingEvts, err := store.GetUpcomingEvents(user)
+	if err != nil {
+		t.Errorf("Error getting upcoming events %v\n", err)
+	}
+
+	if pastEvts[0].ID != evt.ID {
+		t.Errorf("Error getting the correct Event: expected %d but got %d", evt.ID, pastEvts[0].ID)
+	}
+	if upcomingEvts[0].ID != evt2.ID {
+		t.Errorf("Error getting the correct Event: expected %d but got %d", evt2.ID, pastEvts[0].ID)
+	}
+
+	//Getting all of the users events (attending or hosting)
+	_, err = store.GetAllUserEvents(user)
+	if err != nil {
+		t.Errorf("Error getting all user events %v\n", err)
+	}
+
+	_, err = usrStore.AddFriend(user, user2)
+	if err != nil {
+		t.Errorf("Error adding friend %v\n", err)
+	}
+
+	//Getting all the friends of a user of user going to the event
+	_, err = store.GetAllFriendsInEvent(user, evt)
+	if err != nil {
+		t.Errorf("Error getting friends in the event %v\n", err)
+	}
+
+	//Finished updated all things and now delete
 	err = store.DeleteEvent(evt)
 	if err != nil {
 		t.Errorf("error deleting event %v", err)

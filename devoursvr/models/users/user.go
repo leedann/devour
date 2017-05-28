@@ -56,6 +56,41 @@ type GroceryList struct {
 	Ingredients []string      `json:"ingredients"`
 }
 
+//SpecificGrocery is the struct to add and remove a grocery
+type SpecificGrocery struct {
+	Grocery string `json:"grocery"`
+}
+
+//NewDiet represents the new diet structure when adding a diet
+type NewDiet struct {
+	Diets []string `json:"diets"`
+}
+
+//SpecificDiet represents the a specific diet of a user
+type SpecificDiet struct {
+	Diet string `json:"diet"`
+}
+
+//NewAllergy represents the new allergy adding a allergy
+type NewAllergy struct {
+	Allergies []string `json:"allergies"`
+}
+
+//SpecificAllergy represents a specific allergy of a user
+type SpecificAllergy struct {
+	Allergy string `json:"allergy"`
+}
+
+//FavRecipe represents the struct for a favorite recipe
+type FavRecipe struct {
+	Recipe string `json:"recipie"`
+}
+
+//UpdateFavoriteFriend is a struct to update or remove friend as favorite
+type UpdateFavoriteFriend struct {
+	Method string `json:"method"`
+}
+
 //UserLikesList defines the users favorite recipes
 type UserLikesList struct {
 	ID      UserLikesListID `json:"id" bson:"_id"`
