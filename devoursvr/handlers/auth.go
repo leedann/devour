@@ -46,6 +46,9 @@ func (ctx *Context) UserHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		_, err = sessions.BeginSession(ctx.SessionKey, ctx.SessionStore, state, w)
 
+		_, err = ctx.UserStore.CreateLikesList(user)
+		_, err = ctx.UserStore.CreateGroceryList(user)
+
 		w.Header().Add("Content-Type", contentTypeJSONUTF8)
 		encoder := json.NewEncoder(w)
 		encoder.Encode(user)
@@ -201,7 +204,7 @@ func (ctx *Context) UserDietHandler(w http.ResponseWriter, r *http.Request) {
 		for _, val := range newDiet.Diets {
 			_, err := ctx.UserStore.AddDiet(user, val)
 			if err != nil {
-				http.Error(w, "Error adding diet", http.StatusInternalServerError)
+				http.Error(w, "Error adding diet", http.StatusBadRequest)
 			}
 		}
 		//Get all the diets to return
@@ -294,7 +297,7 @@ func (ctx *Context) UserAllergyHandler(w http.ResponseWriter, r *http.Request) {
 		for _, val := range newAllergy.Allergies {
 			_, err := ctx.UserStore.AddAllergy(user, val)
 			if err != nil {
-				http.Error(w, "Error adding allergy", http.StatusInternalServerError)
+				http.Error(w, "Error adding allergy", http.StatusBadRequest)
 			}
 		}
 		//Get all the allergy to return
@@ -417,14 +420,14 @@ func (ctx *Context) SpecificFavRecipeHandler(w http.ResponseWriter, r *http.Requ
 			http.Error(w, "Error adding favorite recipe", http.StatusInternalServerError)
 		}
 		w.Header().Add("Content-Type", contentTypeTextUTF8)
-		w.Write([]byte("recipe has been added from the book"))
+		w.Write([]byte("Recipe has been added from the book"))
 	case "DELETE":
 		err := ctx.UserStore.DeleteFromBook(user, recipeName)
 		if err != nil {
 			http.Error(w, "Unable to remove that recipe", http.StatusBadRequest)
 		}
 		w.Header().Add("Content-Type", contentTypeTextUTF8)
-		w.Write([]byte("recipe has been removed from the book"))
+		w.Write([]byte("Recipe has been removed from the book"))
 	}
 }
 
@@ -479,9 +482,8 @@ func (ctx *Context) SpecificFriendHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 	//get the url from the path
-	_, friendID := path.Split(r.URL.String())
-	var uid users.UserID = friendID
-	friend, err := ctx.UserStore.GetByID(uid)
+	_, friendEmail := path.Split(r.URL.String())
+	friend, err := ctx.UserStore.GetByEmail(friendEmail)
 	if err != nil {
 		http.Error(w, "Error getting friend", http.StatusInternalServerError)
 		return
@@ -563,9 +565,8 @@ func (ctx *Context) SpecificFavFriendHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 	//get the url from the path
-	_, friendID := path.Split(r.URL.String())
-	var uid users.UserID = friendID
-	friend, err := ctx.UserStore.GetByID(uid)
+	_, friendEmail := path.Split(r.URL.String())
+	friend, err := ctx.UserStore.GetByEmail(friendEmail)
 	if err != nil {
 		http.Error(w, "Error getting friend", http.StatusInternalServerError)
 		return
@@ -600,6 +601,7 @@ func (ctx *Context) SpecificFavFriendHandler(w http.ResponseWriter, r *http.Requ
 			w.Header().Add("Content-Type", contentTypeTextUTF8)
 			w.Write([]byte("friend removed from favorites"))
 		default:
+			http.Error(w, "Invalid JSON", http.StatusBadRequest)
 			return
 		}
 	}

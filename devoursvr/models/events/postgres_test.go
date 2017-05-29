@@ -16,7 +16,7 @@ type AllStores struct {
 //TestPostgresStore tests the dockerized PGStore
 func TestPostgresStore(t *testing.T) {
 	//Preparing a Postgres data abstraction for later use
-	psdb, err := sql.Open("postgres", "user=pgstest dbname=pg2 sslmode=disable")
+	psdb, err := sql.Open("postgres", "user=pgstest dbname=devourpg sslmode=disable")
 	if err != nil {
 		t.Errorf("error starting db: %v", err)
 	}

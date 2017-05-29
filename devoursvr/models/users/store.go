@@ -23,6 +23,10 @@ type Store interface {
 	//and returns a User with a newly-assigned ID
 	Insert(newUser *NewUser) (*User, error)
 
+	CreateLikesList(user *User) (*UserLikesList, error)
+
+	CreateGroceryList(user *User) (*GroceryList, error)
+
 	//Update applies UserUpdates to the currentUser
 	Update(updates *UserUpdates, currentuser *User) error
 

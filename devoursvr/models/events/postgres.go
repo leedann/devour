@@ -23,7 +23,7 @@ func (ps *PGStore) InsertEvent(newEvent *NewEvent, creator *users.User) (*Event,
 	if err != nil {
 		return nil, err
 	}
-	evt, err := newEvent.ToEvent(eType.ID, mood.ID, creator.ID)
+	evt, err := newEvent.ToEvent(eType.ID, mood.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -54,10 +54,30 @@ func (ps *PGStore) InsertEvent(newEvent *NewEvent, creator *users.User) (*Event,
 	return evt, err
 }
 
+//GetEventByID gets the event by the id
+func (ps *PGStore) GetEventByID(id EventID) (*Event, error) {
+	var evt = &Event{}
+	err := ps.DB.QueryRow(`SELECT * FROM events WHERE id = $1`, id).Scan(&evt.ID, &evt.TypeID, &evt.Name, &evt.Description, &evt.MoodTypeID, &evt.StartTime, &evt.EndTime)
+	if err == sql.ErrNoRows || err != nil {
+		return nil, err
+	}
+	return evt, nil
+}
+
 //GetTypeByName receives the type name and returns the whole type
 func (ps *PGStore) GetTypeByName(eventType string) (*EventType, error) {
 	var evtType = &EventType{}
 	err := ps.DB.QueryRow(`SELECT * FROM event_type WHERE Name = $1`, eventType).Scan(&evtType.ID, &evtType.Name, &evtType.Description)
+	if err == sql.ErrNoRows || err != nil {
+		return nil, err
+	}
+	return evtType, nil
+}
+
+//GetTypeByID gets the event type be the id
+func (ps *PGStore) GetTypeByID(id TypeID) (*EventType, error) {
+	var evtType = &EventType{}
+	err := ps.DB.QueryRow(`SELECT * FROM event_type WHERE id = $1`, id).Scan(&evtType.ID, &evtType.Name, &evtType.Description)
 	if err == sql.ErrNoRows || err != nil {
 		return nil, err
 	}
@@ -74,10 +94,30 @@ func (ps *PGStore) GetAttendanceStatusByName(status string) (*AttendanceStatus, 
 	return atStat, nil
 }
 
+//GetAttendanceStatusByID gets the attendance status by its id
+func (ps *PGStore) GetAttendanceStatusByID(id StatusID) (*AttendanceStatus, error) {
+	var atStat = &AttendanceStatus{}
+	err := ps.DB.QueryRow(`SELECT * FROM event_attendance_status WHERE id = $1`, id).Scan(&atStat.ID, &atStat.AttendanceStatus)
+	if err == sql.ErrNoRows || err != nil {
+		return nil, err
+	}
+	return atStat, nil
+}
+
 //GetMoodByName gets the mood type and returns the whole type
 func (ps *PGStore) GetMoodByName(moodName string) (*MoodType, error) {
 	var moodType = &MoodType{}
 	err := ps.DB.QueryRow(`SELECT * FROM event_mood_type WHERE Name = $1`, moodName).Scan(&moodType.ID, &moodType.Name, &moodType.Description)
+	if err == sql.ErrNoRows || err != nil {
+		return nil, err
+	}
+	return moodType, nil
+}
+
+//GetMoodByID gets the mood type by its ID
+func (ps *PGStore) GetMoodByID(id MoodTypeID) (*MoodType, error) {
+	var moodType = &MoodType{}
+	err := ps.DB.QueryRow(`SELECT * FROM event_mood_type WHERE id = $1`, id).Scan(&moodType.ID, &moodType.Name, &moodType.Description)
 	if err == sql.ErrNoRows || err != nil {
 		return nil, err
 	}
@@ -157,6 +197,9 @@ func (ps *PGStore) UpdateAttendanceStatus(user *users.User, event *Event, status
 
 //UpdateEventStart changes the starting time of the event (ONLY CREATOR)
 func (ps *PGStore) UpdateEventStart(event *Event, newTime string) error {
+	if newTime == "" {
+		return nil
+	}
 	//start a transaction
 	tx, err := ps.DB.Begin()
 	//err if transaction could not start
@@ -183,6 +226,9 @@ func (ps *PGStore) UpdateEventStart(event *Event, newTime string) error {
 
 //UpdateEventEnd changes the ending time of the event (ONLY CREATOR)
 func (ps *PGStore) UpdateEventEnd(event *Event, newTime string) error {
+	if newTime == "" {
+		return nil
+	}
 	//start a transaction
 	tx, err := ps.DB.Begin()
 	//err if transaction could not start
@@ -216,6 +262,9 @@ func (ps *PGStore) UpdateEventEnd(event *Event, newTime string) error {
 
 //UpdateEventMood changes the mood of the event (ONLY CREATOR)
 func (ps *PGStore) UpdateEventMood(event *Event, mood string) error {
+	if mood == "" {
+		return nil
+	}
 	//start a transaction
 	tx, err := ps.DB.Begin()
 	//err if transaction could not start
@@ -243,6 +292,9 @@ func (ps *PGStore) UpdateEventMood(event *Event, mood string) error {
 
 //UpdateEventType changes the type of the event (ONLY CREATOR)
 func (ps *PGStore) UpdateEventType(event *Event, typeName string) error {
+	if typeName == "" {
+		return nil
+	}
 	//start a transaction
 	tx, err := ps.DB.Begin()
 	//err if transaction could not start
@@ -270,6 +322,9 @@ func (ps *PGStore) UpdateEventType(event *Event, typeName string) error {
 
 //UpdateEventName changes the name of the Event (ONLY CREATOR)
 func (ps *PGStore) UpdateEventName(event *Event, name string) error {
+	if name == "" {
+		return nil
+	}
 	//start a transaction
 	tx, err := ps.DB.Begin()
 	//err if transaction could not start
@@ -291,6 +346,9 @@ func (ps *PGStore) UpdateEventName(event *Event, name string) error {
 
 //UpdateEventDescription changes the description of the event (ONLY CREATOR)
 func (ps *PGStore) UpdateEventDescription(event *Event, desc string) error {
+	if desc == "" {
+		return nil
+	}
 	//start a transaction
 	tx, err := ps.DB.Begin()
 	//err if transaction could not start
@@ -452,7 +510,7 @@ func (ps *PGStore) GetAllRecipesInEvent(event *Event) ([]string, error) {
 func (ps *PGStore) GetAllUsersInEvent(event *Event) ([]*users.User, error) {
 	var allUsers []*users.User
 	rows, err := ps.DB.Query(`
-	SELECT U.ID, U.FirstName, U.LastName, U.PhotoURL 
+	SELECT U.ID, U.FirstName, U.Email, U.LastName, U.PhotoURL 
 	FROM event_attendance E 
 	INNER JOIN Users U ON E.UserID = U.ID 
 	WHERE E.EventID = $1`, event.ID)
@@ -466,7 +524,7 @@ func (ps *PGStore) GetAllUsersInEvent(event *Event) ([]*users.User, error) {
 		var usr = &users.User{}
 
 		//scans values into User struct; error returned if scan unsuccessful
-		if err := rows.Scan(&usr.ID, &usr.FirstName, &usr.LastName, &usr.PhotoURL); err != nil {
+		if err := rows.Scan(&usr.ID, &usr.FirstName, &usr.Email, &usr.LastName, &usr.PhotoURL); err != nil {
 			return nil, err
 		}
 
@@ -526,8 +584,8 @@ func (ps *PGStore) GetPastEvents(user *users.User) ([]*Event, error) {
 	INNER JOIN events C ON B.EventID = C.ID
 	INNER JOIN event_attendance_status D ON D.ID = B.StatusID
 	WHERE EndTime < $1 
-	AND B.UserID = $2 
-	AND D.AttendanceStatus = 'Pending' OR D.AttendanceStatus = 'Host'`, time.Now(), user.ID)
+	AND (B.UserID = $2 
+	AND D.AttendanceStatus = 'Pending' OR D.AttendanceStatus = 'Host')`, time.Now(), user.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -562,10 +620,9 @@ func (ps *PGStore) GetUpcomingEvents(user *users.User) ([]*Event, error) {
 	INNER JOIN event_attendance B ON A.ID = B.UserID
 	INNER JOIN events C ON B.EventID = C.ID
 	INNER JOIN event_attendance_status D ON D.ID = B.StatusID
-	WHERE EndTime > $1 
-	OR EndTime = $1
-	AND B.UserID = $2 
-	AND D.AttendanceStatus = 'Pending' OR D.AttendanceStatus = 'Host'`, time.Now(), user.ID)
+	WHERE (EndTime > $1)
+	AND (B.UserID = $2 
+	AND D.AttendanceStatus = 'Pending' OR D.AttendanceStatus = 'Host')`, time.Now(), user.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -664,7 +721,7 @@ func (ps *PGStore) GetAllUserEvents(user *users.User) ([]*Event, error) {
 func (ps *PGStore) GetAllFriendsInEvent(user *users.User, event *Event) ([]*users.User, error) {
 	var allUsers []*users.User
 	rows, err := ps.DB.Query(`
-	SELECT U.ID, U.FirstName, U.LastName, U.PhotoURL FROM event_attendance E 
+	SELECT U.ID, U.Email, U.FirstName, U.LastName, U.PhotoURL FROM event_attendance E 
 	INNER JOIN Users U ON E.UserID = U.ID 
 	INNER JOIN friends_list F ON U.ID = F.UserID 
 	WHERE E.EventID = $1 AND F.UserID = $2`, event.ID, user.ID)
@@ -676,9 +733,8 @@ func (ps *PGStore) GetAllFriendsInEvent(user *users.User, event *Event) ([]*user
 	//returns false once EOF
 	for rows.Next() {
 		var usr = &users.User{}
-
 		//scans values into User struct; error returned if scan unsuccessful
-		if err := rows.Scan(&usr.ID, &usr.FirstName, &usr.LastName, &usr.PhotoURL); err != nil {
+		if err := rows.Scan(&usr.ID, &usr.Email, &usr.FirstName, &usr.LastName, &usr.PhotoURL); err != nil {
 			return nil, err
 		}
 

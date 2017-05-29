@@ -36,6 +36,11 @@ type RecipeSuggest struct {
 	Recipe  string       `json:"recipeName"`
 }
 
+//RecipeAdd is the struct required to add a recipe to event
+type RecipeAdd struct {
+	Recipe string `json:"recipeName"`
+}
+
 //Event represents gathering information
 type Event struct {
 	ID          EventID    `json:"id" bson:"_id"`
@@ -47,6 +52,17 @@ type Event struct {
 	EndTime     time.Time  `json:"endAt"`
 }
 
+//FmtEvent represents gathering information however readable for the client
+type FmtEvent struct {
+	ID          EventID   `json:"id" bson:"_id"`
+	Type        string    `json:"type"`
+	Name        string    `json:"name"`
+	Description string    `json:"description,omitempty"`
+	MoodType    string    `json:"moodType"`
+	StartTime   time.Time `json:"startAt"`
+	EndTime     time.Time `json:"endAt"`
+}
+
 //NewEvent represents a new event-- recorder from user input
 type NewEvent struct {
 	Name        string `json:"name"`
@@ -55,6 +71,11 @@ type NewEvent struct {
 	EndTime     string `json:"endTime"`
 	EventType   string `json:"type"`
 	MoodType    string `json:"mood"`
+}
+
+//Invitation represents the invitation to or removal from event
+type Invitation struct {
+	Email string `json:"email"`
 }
 
 //EventType represents the type of events -- birthday, potluck, etc
@@ -85,8 +106,14 @@ type AttendanceStatus struct {
 	AttendanceStatus string   `json:"attendanceStatus"`
 }
 
+//UpdateAttendance is the struct to update an event
+type UpdateAttendance struct {
+	EventID          string `json:"eventid"`
+	AttendanceStatus string `json:"attendanceStatus"`
+}
+
 //ToEvent takes a new event and adds all the necessary information to make an Event
-func (ne *NewEvent) ToEvent(eventType TypeID, eventMood MoodTypeID, user users.UserID) (*Event, error) {
+func (ne *NewEvent) ToEvent(eventType TypeID, eventMood MoodTypeID) (*Event, error) {
 	event := &Event{}
 	//date time has to be formatted exactly like longform
 

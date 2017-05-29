@@ -185,6 +185,16 @@ func (ps *PGStore) AddDiet(user *User, diet string) (*Diet, error) {
 		return nil, err
 	}
 	d.DietTypeID = dName.ID
+
+	//Check if user has the diet
+	usersDiet, _ := ps.GetUserDiet(user)
+	if usersDiet != nil {
+		for _, diet := range usersDiet {
+			if diet.DietTypeID == dName.ID {
+				return nil, nil
+			}
+		}
+	}
 	sql := `INSERT INTO user_diet_type (UserID, DietTypeID, BeginDate) VALUES ($1, $2, $3) RETURNING id`
 	//Receives ONE row from the database
 	row := tx.QueryRow(sql, d.UserID, d.DietTypeID, d.BeginDate)
@@ -216,6 +226,16 @@ func (ps *PGStore) AddAllergy(user *User, allergyName string) (*UserAllergyType,
 		return nil, err
 	}
 	allergy.AllergyTypeID = aName.ID
+
+	//Check if user already has the allergy
+	usersAllergies, _ := ps.GetUserAllergy(user)
+	if usersAllergies != nil {
+		for _, allergy := range usersAllergies {
+			if allergy.AllergyTypeID == aName.ID {
+				return nil, nil
+			}
+		}
+	}
 	sql := `INSERT INTO user_allergy_type (UserID, AllergyTypeID) VALUES ($1, $2) RETURNING id`
 	//Receives ONE row from the database
 	row := tx.QueryRow(sql, allergy.UserID, allergy.AllergyTypeID)
@@ -420,7 +440,7 @@ func (ps *PGStore) DeleteFromGrocery(user *User, ingredient string) error {
 }
 
 //CreateLikesList initiates the users favorites list
-func (ps *PGStore) createLikesList(user *User) (*UserLikesList, error) {
+func (ps *PGStore) CreateLikesList(user *User) (*UserLikesList, error) {
 	var ulList = &UserLikesList{}
 	ulList.UserID = user.ID
 	//start a transaction
@@ -445,7 +465,7 @@ func (ps *PGStore) createLikesList(user *User) (*UserLikesList, error) {
 }
 
 //CreateGroceryList initiates the users grocery list
-func (ps *PGStore) createGroceryList(user *User) (*GroceryList, error) {
+func (ps *PGStore) CreateGroceryList(user *User) (*GroceryList, error) {
 	var gList = &GroceryList{}
 	gList.UserID = user.ID
 	//start a transaction
@@ -705,8 +725,6 @@ func (ps *PGStore) Insert(newUser *NewUser) (*User, error) {
 	}
 	//commits the transaction-- connection no longer reserved
 	tx.Commit()
-	ps.createLikesList(u)
-	ps.createGroceryList(u)
 	return u, nil
 }
 
