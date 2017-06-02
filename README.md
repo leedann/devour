@@ -37,13 +37,13 @@ The account has no diet, however is allergic to dairy.
 Technology
 =======
 
-<img src="http://react-etc.net/files/2016-07/logo-578x270.png" align="left" width="200"/> <br />
+<img src="http://react-etc.net/files/2016-07/logo-578x270.png" align="left" width="100"/> <br />
 Declarative, and Component-based makes creating ui easy! It is also what I am familiar with
 
-<img src="http://octivi.com/wp-content/uploads/2014/05/redis.png" align="left" width="200"/><br />
+<img src="http://octivi.com/wp-content/uploads/2014/05/redis.png" align="left" width="100"/><br />
 User store, it helps keep the important information separated from the database. Simple and easy to use
 
-<img src="https://softwareengineeringdaily.com/wp-content/uploads/2016/10/PostgreSQL.png" align="left" width="200"/><br />
+<img src="https://softwareengineeringdaily.com/wp-content/uploads/2016/10/PostgreSQL.png" align="left" width="100"/><br />
 Open-Sourced database. Helps making many-to-many relationships easy to deal with (we have many)
 
 <img src="https://msopentech.com/wp-content/uploads/dockericon.png" align="left"  width="200"/><br />
