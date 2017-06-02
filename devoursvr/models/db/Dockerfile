@@ -1,4 +1,5 @@
 FROM postgres
-ENV POSTGRES_DB pg2
+# this is the name of the pg
+ENV POSTGRES_DB devourpg
 COPY *.sql /docker-entrypoint-initdb.d/
 

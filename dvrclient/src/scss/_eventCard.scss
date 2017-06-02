@@ -18,6 +18,11 @@ $lightWash: lighten($washedAmber, 10%);
     margin: 0px;
     padding: 20px;
 }
+
+.timePadding {
+    margin: 0px;
+    padding: 20px;
+}
 .eventTitleCircle {
     margin-bottom: 10px;
 }
@@ -37,7 +42,6 @@ $lightWash: lighten($washedAmber, 10%);
     padding: 0;
     width: $screenSize;
     background-color: #FFFFFF;
-
 }
 
 .evtCardName {

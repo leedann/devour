@@ -1,8 +1,10 @@
 $washedAmber: #FFECB3;
+$hotpink: #F50057;
 $lightWash: lighten($washedAmber, 10%);
 
 .menuItem {
     text-align: center;
+    color: $hotpink;
 }
 
 

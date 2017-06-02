@@ -1,10 +1,11 @@
 $paginateSize: 40px;
 $lightgrey: #E0E0E0;
 $washedAmber: #FFECB3;
+$hotpink: #F50057;
 //header and footer css
 .homeButton {
-    align-self: center
-    
+    align-self: center;
+    color: $hotpink;
 }
 .pageContent {
     margin-bottom: 15vh;
@@ -17,7 +18,12 @@ $washedAmber: #FFECB3;
 }
 
 .headerico {
-    margin-left: 15px;
+    font-size: 25px;
+    margin-right: 10px;
+    color: $hotpink;
+}
+.headerRow > nav {
+    padding-right: 30px !important;
 }
 
 .footRight, .footLeft {
@@ -58,7 +64,8 @@ $washedAmber: #FFECB3;
 }
 
 .homeIcon {
-    font-size: $paginateSize
+    font-size: $paginateSize;
+    color: $hotpink;
 }
 
 .headerRow {

@@ -9,9 +9,9 @@ func createNewUser() *NewUser {
 		Email:        "test@test.com",
 		Password:     "password",
 		PasswordConf: "password",
-		UserName:     "mrtester",
 		FirstName:    "test",
 		LastName:     "tester",
+		DOB:          "12/12/1990",
 	}
 }
 
@@ -28,7 +28,6 @@ func TestNewUserValidate(t *testing.T) {
 		t.Errorf("shouldn't have gotten an error about valid email\n")
 	}
 
-	nu.UserName = ""
 	if err := nu.Validate(); nil == err {
 		t.Errorf("should have gotten an error about missing user name\n")
 	}

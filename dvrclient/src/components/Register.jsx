@@ -1,6 +1,26 @@
 import React from "react";
 import { Link } from 'react-router-dom';
-import {history} from './app.jsx'
+import {history} from './app.jsx';
+import DOBForm from './helpers/DOBdown.jsx';
+import MonthDown from './helpers/dropdown.jsx';
+import moment from "moment"; 
+const baseurl = 'https://dvrapi.leedann.me/v1/'
+
+const datefmt = {
+    "January": "01",
+    "February": "02",
+    "March": "03",
+    "April": "04",
+    "May": "05",
+    "June": "06",
+    "July": "07",
+    "August": "08",
+    "September": "09",
+    "October": "10",
+    "November": "11",
+    "December": "12"
+}
+
 
 //Registration page
 export default class Register extends React.Component {
@@ -8,12 +28,13 @@ export default class Register extends React.Component {
         super(props);
         this.state = {
             passMatch: "",
+            passLength: "",
+            validDate: "",
             errmess: ""
         };
     }
 
     componentDidMount() {
-
     }
 
     //if the password does not match dont let register
@@ -31,6 +52,20 @@ export default class Register extends React.Component {
             })
         }
     }
+    passLength(e) {
+        e.preventDefault();
+        let pass1 = document.getElementById("pass");
+        let pass2 = document.getElementById("pass2");
+        if (pass1.value < 6 || pass2.value < 6) {
+            this.setState({
+                passLength: false
+            })
+        }else {
+            this.setState({
+                passLength: true
+            })
+        }
+    }
 
     //handles submitting the registration
     handleSubmit(event) {
@@ -40,23 +75,48 @@ export default class Register extends React.Component {
         let email=document.getElementById("email").value
         let password=document.getElementById("pass").value
         let passconf=document.getElementById("pass2").value
+        let month = document.getElementById("dobMonth").getElementsByClassName('text')[0].textContent;
+        let day = document.getElementById("dobDay").value;
+        let year = document.getElementById("dobYear").value;
+        if (parseInt(day, 10) < 10) {
+            day = "0" + parseInt(day, 10);
+        }
+        var date = `${datefmt[month]}/${day}/${year}`
+        var momentCheck = `${year}-${datefmt[month]}-${day}`
+
         //if passwords are matching, POST to the url
-        if (!this.state.passMatch) {
+        if (!this.state.passMatch && !this.state.passLength && moment(momentCheck).isValid()) {
             var data = {
                 "Email": email,
                 "Password": password,
                 "PasswordConf": passconf,
-                "Username": username,
                 "FirstName": firstName,
-                "LastName": lastName
+                "LastName": lastName,
+                "DOB": date
             }
             //api post call to the users db
             if (data) {
-
+                data = JSON.stringify(data);
+                var req = {
+                    method: 'POST',
+                    body: data
+                }
+                fetch(baseurl+'users', req)
+                .then((resp) => {
+                    localStorage.setItem("Authorization", resp.headers.get('Authorization'));
+                    history.push('/welcome')
+                })
+                .catch((error) => {
+                    this.setState({
+                        errmess: error.response.data
+                    })
+                })
             }
+        }else if (!moment(momentCheck).isValid()) {
+            this.setState({
+                validDate: true
+            })
         }
-        //will need to move to end of successful api call
-        history.push("/welcome");
     }
 
     registerTile() {
@@ -77,12 +137,24 @@ export default class Register extends React.Component {
                         <div className="mdl-textfield mdl-js-textfield">
                             <input className="mdl-textfield__input" type="email" id="email" placeholder="Email" required/>
                         </div>
+                        <div>
+                            {this.state.validDate? <span className="notValid" id="notValid">Please pick a valid date</span> : ""}
+                            <p>Date of Birth:</p>
+                            <MonthDown/>
+                            <DOBForm/>
+                        </div>
                         {this.state.passMatch? <span className="notMatch" id="notMatch">Passwords do not match</span> : ""}
+                        <br/>
+                        {this.state.passLength? <span className="notLength" id="notLength">Passwords must be at least 6 characters</span> : ""}
                         <div className="mdl-textfield mdl-js-textfield">
-                            <input className="mdl-textfield__input" type="password" id="pass" placeholder="Password"required/>
+                            <input className="mdl-textfield__input" onChange={(e) => {
+                                this.passLength(e)
+                                }} type="password" id="pass" placeholder="Password"required/>
                         </div>
                         <div className="mdl-textfield mdl-js-textfield">
-                            <input className="mdl-textfield__input" onChange={(e) => this.passwordMatch(e)}type="password" id="pass2" placeholder="Re-Enter Password"required/>
+                            <input className="mdl-textfield__input" onChange={(e) => {
+                                this.passwordMatch(e)
+                                } }type="password" id="pass2" placeholder="Re-Enter Password"required/>
                         </div>
                         <div className="mdl-grid mdl-cell mdl-cell--12-col lrContainer">
                             <div className="mdl-cell mdl-cell--6-col mdl-cell--2-col-phone login">

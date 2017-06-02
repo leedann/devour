@@ -13,7 +13,7 @@ $textSize: 20px;
     max-width: 350px;
     @media (min-width: 841px) {
         height: 300px;
-        max-width: 35vw;
+        max-width: 36vw;
     }
 }
 
@@ -31,9 +31,22 @@ $textSize: 20px;
     align-items: flex-end;
     justify-content: flex-end;
 }
+
+.RText {
+    font-weight: 500;
+    background-image: linear-gradient(to right, rgba(255, 235, 255,.8), rgba(255, 255, 255,.7));
+}
+
 .recipeName {
-    font-size: 1.25em;
+    padding-top: 3px;
+    padding-left: 10px;
+    margin: 0;
+    max-height: 20px;
+    font-size: 1em;
     fill: $lightblack;
+}
+.recipeActions > .material-icons {
+    padding-bottom: 0;
 }
 
 .favButton {
@@ -60,5 +73,10 @@ $textSize: 20px;
 }
 
 .recipeInfo {
-    overflow-y: scroll
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.recipeList {
+    padding-left: 5px;
 }

@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from 'react-router-dom';
-import {history} from './app.jsx'
+import {history} from './app.jsx';
+const baseurl = 'https://dvrapi.leedann.me/v1/'
 
 //The login tile
 export default class Login extends React.Component {
@@ -14,8 +15,6 @@ export default class Login extends React.Component {
     componentDidMount() {
 
     }
-
-
     handleSubmit(event) {
         event.preventDefault();
         let email=document.getElementById("email").value
@@ -26,9 +25,23 @@ export default class Login extends React.Component {
         }
         //users api call here
         if (userinfo) {
-
+            var data = JSON.stringify(userinfo);
+            var req = {
+                method: 'POST',
+                body: data
+            }
+            fetch(baseurl+'sessions', req)
+            .then(resp => {
+                console.log(resp.headers)
+                localStorage.setItem("Authorization", resp.headers.get('Authorization'));
+                history.push('/home')
+            })
+            .catch((error) => {
+                this.setState({
+                    errmess: "Invalid Email or Password"
+                })
+            })
         }
-        history.push('/home')
     }
 
 

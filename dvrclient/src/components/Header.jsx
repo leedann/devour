@@ -1,9 +1,15 @@
 import React from "react";
 import { Link } from 'react-router-dom';
+import { Dropdown } from 'semantic-ui-react';
+import {history} from './app.jsx';
+const myHeader = new Headers();
+myHeader.append('Authorization', localStorage.getItem("Authorization"));
+const baseurl = 'https://dvrapi.leedann.me/v1/'
+
 
 //the buttons for the header
 const buttons= {
-    "/home": ["/shop", "/settings", "/info"],
+    "/home": ["/shop", "/info", "/settings"],
     "/recipes": ["/search", "/filter"],
     "/social": ["/create", "/info"],  
     "/create": ["/create", "/info"],  
@@ -26,6 +32,31 @@ export default class Header extends React.Component {
     componentDidMount() {
     }
 
+    handleLogout(event) {
+        event.preventDefault();
+        localStorage.removeItem("devour-store")
+        //auth doesnt even exist
+        if (!localStorage.getItem("Authorization")) {
+            //sign out
+            history.push('/');
+        //user clicked logout
+        }else {
+            var req = {
+                method: 'DELETE',
+                headers: myHeader
+            }
+            fetch(baseurl+'sessions/mine', req)
+            .then((resp) => {
+                localStorage.removeItem("Authorization")
+                history.push('/')
+            })
+            .catch((err) => {
+                history.push('/')
+            })
+        }
+    
+}
+
     //the header for the survey pages
     surveyHeader() {
         return (
@@ -47,7 +78,13 @@ export default class Header extends React.Component {
                     <nav className="mdl-navigation">
                         <Link to={this.state.choices[0]}> <i className="headerico material-icons">{this.state.icon1}</i></Link>
                         <Link to={this.state.choices[1]}> <i className="headerico material-icons">{this.state.icon2}</i></Link>
-                    {this.state.choices[2]? <Link to={this.state.choices[2]}> <i className="headerico material-icons">{this.state.icon3}</i></Link> : ""}
+                    {this.state.choices[2]? 
+                        <Dropdown className="headerico" icon='setting'>
+                            <Dropdown.Menu>
+                            <Dropdown.Item onClick={(event) => this.handleLogout(event)}text='Sign-Out' />
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    : ""}
                     </nav>
                 </div>
             </header>
