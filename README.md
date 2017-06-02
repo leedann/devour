@@ -10,11 +10,11 @@ There is a magic in food and power in breaking bread together.
 We are Devour, helping you eat together, your way.
 
 Here is our current build:
-[Homepage](https://dvr.leedann.me)
+- [Homepage](https://dvr.leedann.me)
 
 Here is the everything else:
-[Server](https://github.com/leedann/devour/tree/master/devoursvr)
-[Client](https://github.com/leedann/devour/tree/master/dvrclient)
+- [Server](https://github.com/leedann/devour/tree/master/devoursvr)
+- [Client](https://github.com/leedann/devour/tree/master/dvrclient)
 
 
 Current Status
@@ -28,8 +28,8 @@ Current Status
 - NOT able to add budget, check your recipebook, plan, or friends
 
 You will be able to test group recipe searches using our test account
-Username: test@test.com
-Password: password
+- Username: test@test.com
+- Password: password
 
 This account is already invited to an event with two other users.
 The account has no diet, however is allergic to dairy.
