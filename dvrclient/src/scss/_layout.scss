@@ -18,8 +18,12 @@ $hotpink: #F50057;
 }
 
 .headerico {
-    margin-left: 15px;
+    font-size: 25px;
+    margin-right: 10px;
     color: $hotpink;
+}
+.headerRow > nav {
+    padding-right: 30px !important;
 }
 
 .footRight, .footLeft {

@@ -168,6 +168,21 @@ func (ps *PGStore) GetUserAttendanceStatus(user *users.User, event *Event) (*Att
 	return atnStatus, nil
 }
 
+//GetHost gets the host of an event
+func (ps *PGStore) GetHost(event *Event) (*users.User, error) {
+	var user = &users.User{}
+	err := ps.DB.QueryRow(`
+	SELECT U.ID, U.Email, U.FirstName, U.LastName, U.DOB, U.PhotoURL
+	FROM event_attendance E
+	INNER JOIN event_attendance_status S ON E.StatusID = S.ID
+	INNER JOIN users U ON E.UserID = U.ID
+	WHERE E.EventID = $1`, event.ID).Scan(&user.ID, &user.Email, &user.FirstName, &user.LastName, &user.DOB, &user.PhotoURL)
+	if err == sql.ErrNoRows || err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
 //UpdateAttendanceStatus updates the status of a user to an event
 func (ps *PGStore) UpdateAttendanceStatus(user *users.User, event *Event, status string) error {
 	//start a transaction
@@ -620,7 +635,7 @@ func (ps *PGStore) GetUpcomingEvents(user *users.User) ([]*Event, error) {
 	INNER JOIN event_attendance B ON A.ID = B.UserID
 	INNER JOIN events C ON B.EventID = C.ID
 	INNER JOIN event_attendance_status D ON D.ID = B.StatusID
-	WHERE (EndTime > $1)
+	WHERE EndTime > $1
 	AND (B.UserID = $2 
 	AND D.AttendanceStatus = 'Pending' OR D.AttendanceStatus = 'Host')`, time.Now(), user.ID)
 	if err != nil {

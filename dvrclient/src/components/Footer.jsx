@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from 'react-router-dom';
 
 //the routes from welcome all the way to the end of the survey screens
-const surveyRoute = ["/welcome", "/survey", "/selectgoals", "/allergyinfo", "/surveyend"];
+const surveyRoute = ["/welcome", "/survey", "/surveyend"];
 //The footer of every page
 export default class Footer extends React.Component {
     constructor(props) {
@@ -97,7 +97,7 @@ render() {
             case "devour":
                 return this.blankFooter();
             case "taste profile":
-                return this.surveyFooter();
+                return this.blankFooter();
             case "recipes":
                 return (<span></span>);
             case "social":

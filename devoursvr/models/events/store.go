@@ -17,6 +17,9 @@ type Store interface {
 	//Inserts a new event into the db
 	InsertEvent(newEvent *NewEvent, creator *users.User) (*Event, error) //done
 
+	//gets host of an event
+	GetHost(event *Event) (*users.User, error)
+
 	//Helper to get the event by its id
 	GetEventByID(id EventID) (*Event, error)
 

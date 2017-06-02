@@ -36,6 +36,12 @@ type RecipeSuggest struct {
 	Recipe  string       `json:"recipeName"`
 }
 
+//DietAllergies all the diets and allergies in event
+type DietAllergies struct {
+	Allergies []string `json:"allergies"`
+	Diets     []string `json:"diets"`
+}
+
 //RecipeAdd is the struct required to add a recipe to event
 type RecipeAdd struct {
 	Recipe string `json:"recipeName"`

@@ -44,27 +44,28 @@ func BeginSession(signingKey string, store Store, state interface{}, w http.Resp
 func GetSessionID(r *http.Request, signingKey string) (SessionID, error) {
 	//get the value of the Authorization header
 	auth := r.Header.Get("Authorization")
-	//if it's zero-length, return InvalidSessionID and ErrNoSessionID
+	//if it's zero-length get the query strim param, if not there, return InvalidSessionID and ErrNoSessionID
 	if len(auth) == 0 {
-		return InvalidSessionID, ErrNoSessionID
-	}
-	//if it doesn't start with "Bearer ",
-	//return InvalidSessionID and ErrInvalidScheme
-	if !strings.HasPrefix(auth, "Bearer ") {
-		return InvalidSessionID, ErrInvalidScheme
+		auth = r.URL.Query().Get("auth")
+		//if there is no query string param
+		if len(auth) == 0 {
+			return InvalidSessionID, ErrNoSessionID
+		}
+	} else { //auth is the header
+		//if it doesn't start with "Bearer ",
+		//return InvalidSessionID and ErrInvalidScheme
+		if !strings.HasPrefix(auth, "Bearer ") {
+			return InvalidSessionID, ErrInvalidScheme
+		}
+		//trim off the "Bearer " prefix and validate the remaining id
+		auth = strings.TrimPrefix(auth, "Bearer ")
 	}
 
-	//trim off the "Bearer " prefix and validate the remaining id
 	//if you get an error return InvalidSessionID and the error
-
-	auth = strings.TrimPrefix(auth, "Bearer ")
-
 	valid, err := ValidateID(auth, signingKey)
-
 	if err != nil {
 		return InvalidSessionID, err
 	}
-
 	//return the validated SessionID and nil
 	return valid, nil
 }

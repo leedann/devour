@@ -1,26 +1,30 @@
 import React from "react";
 import GRequestsList from "./gatheringRequest_tiles.jsx";
+import {store} from "./shared-state.js";
 import { Link } from 'react-router-dom';
 import Layout from "./Layout.jsx";
+const myHeader = new Headers();
+myHeader.append('Authorization', localStorage.getItem("Authorization"));
 
 //The actually events requests the user has
 export default class GatheringRequests extends React.Component {
+    constructor(props) {
+        super(props);
+        //not authorized
+        if (!localStorage.getItem("Authorization")) {
+            this.props.history.push('/')
+        }
+        this.state= store.getState()
+    }
+
+    componentDidMount() {
+        this.unsub = store.subscribe(() => this.setState(store.getState()));
+    }
+    componentWillUnmount() {
+        this.unsub();
+    }
     render() {
-        var d1 = new Date('09/09/2017');
-        var d2 = new Date('12/12/2017');
-        var evnt1={
-            id: 1,
-            Name: "Surprise Party For Morty",
-            Hosting: false,
-            StartTime: d1
-        }
-        var evnt2={
-            id: 2,
-            Name: "Dinner at Danny's",
-            Hosting: false,
-            StartTime: d2
-        }
-        var test = [evnt1, evnt2];
+        console.log(this.state)
         return(
             <Layout title="social">
                 <Link to="/social" className="eventLink">
@@ -29,7 +33,7 @@ export default class GatheringRequests extends React.Component {
                         <p>Events</p>
                     </span>
                 </Link>
-                <GRequestsList events={test} />
+                <GRequestsList events={this.state.pendingEvents} />
             </Layout>
         );
     }

@@ -16,6 +16,7 @@ import (
 	"github.com/leedann/devour/devoursvr/middleware"
 	"github.com/leedann/devour/devoursvr/models/events"
 	"github.com/leedann/devour/devoursvr/models/users"
+	"github.com/leedann/devour/devoursvr/notification"
 	"github.com/leedann/devour/devoursvr/sessions"
 	_ "github.com/lib/pq"
 )
@@ -39,6 +40,7 @@ const (
 	event      = "events"
 	recipes    = "/recipes"
 	attendance = "attendance"
+	ws         = "websocket"
 )
 
 //main is the main entry point for this program
@@ -106,12 +108,16 @@ func main() {
 	}
 	redisStore := sessions.NewRedisStore(client, time.Hour*3600)
 
+	notify := notification.NewNotifier()
+	go notify.Start()
+
 	//creating the starting table "general"
 	ctx := &handlers.Context{
 		SessionKey:   SESSIONKEY,
 		SessionStore: redisStore,
 		UserStore:    usrStore,
 		EventStore:   evtStore,
+		Notifier:     notify,
 	}
 
 	mux := http.NewServeMux()
@@ -153,6 +159,8 @@ func main() {
 	mux.HandleFunc(apiRoot+event+recipes+specific, ctx.EventRecipesHandler)
 
 	mux.HandleFunc(apiSummary, handlers.SummaryHandler)
+	//websocket
+	mux.HandleFunc(apiRoot+ws, ctx.WebSocketUpgradeHandler)
 	http.Handle(apiRoot, middleware.Adapt(mux, middleware.CORS("", "", "", "")))
 
 	//add your handlers.SummaryHandler function as a handler

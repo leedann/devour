@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/leedann/devour/devoursvr/models/users"
+	"github.com/leedann/devour/devoursvr/notification"
 	"github.com/leedann/devour/devoursvr/sessions"
 )
 
@@ -217,6 +218,12 @@ func (ctx *Context) UserDietHandler(w http.ResponseWriter, r *http.Request) {
 			diet, _ := ctx.UserStore.GetDietByID(val.DietTypeID)
 			dietNames = append(dietNames, diet.Name)
 		}
+		//Recipe events adding recipe FROM event
+		ntfy := &notification.DietEvent{
+			EventType: notification.NewDiet,
+			Message:   dietNames,
+		}
+		ctx.Notifier.Notify(ntfy)
 		w.Header().Add("Content-Type", contentTypeJSONUTF8)
 		encoder := json.NewEncoder(w)
 		encoder.Encode(allDiets)
@@ -250,6 +257,13 @@ func (ctx *Context) SpecificDietHandler(w http.ResponseWriter, r *http.Request) 
 		if err != nil {
 			http.Error(w, "Unable to remove that diet", http.StatusBadRequest)
 		}
+		nameArr := []string{dietName}
+		//Removal of a diet
+		ntfy := &notification.DietEvent{
+			EventType: notification.RemoveDiet,
+			Message:   nameArr,
+		}
+		ctx.Notifier.Notify(ntfy)
 		w.Header().Add("Content-Type", contentTypeTextUTF8)
 		w.Write([]byte("Diet has been removed from the user"))
 	}
@@ -310,10 +324,16 @@ func (ctx *Context) UserAllergyHandler(w http.ResponseWriter, r *http.Request) {
 			allergy, _ := ctx.UserStore.GetAllergyByID(val.AllergyTypeID)
 			allergyNames = append(allergyNames, allergy.Name)
 		}
+		//Recipe events adding allergy
+		ntfy := &notification.AllergyEvent{
+			EventType: notification.NewAllergy,
+			Message:   allergyNames,
+		}
+		ctx.Notifier.Notify(ntfy)
 		w.Header().Add("Content-Type", contentTypeJSONUTF8)
 		encoder := json.NewEncoder(w)
 		encoder.Encode(allergyNames)
-	case "DELETE": //Deletes a diet from the user -- requires a diet name
+	case "DELETE": //Deletes a allergy, requires an allergy name
 		decoder := json.NewDecoder(r.Body)
 		specificAllergy := &users.SpecificAllergy{}
 		if err := decoder.Decode(specificAllergy); err != nil {
@@ -324,6 +344,13 @@ func (ctx *Context) UserAllergyHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			http.Error(w, "Unable to remove that diet", http.StatusBadRequest)
 		}
+		nameArr := []string{specificAllergy.Allergy}
+		//Removal of a allergy
+		ntfy := &notification.AllergyEvent{
+			EventType: notification.RemoveAllergy,
+			Message:   nameArr,
+		}
+		ctx.Notifier.Notify(ntfy)
 		w.Header().Add("Content-Type", contentTypeTextUTF8)
 		w.Write([]byte("Allergy has been removed from the user"))
 	}
@@ -356,6 +383,13 @@ func (ctx *Context) SpecificAllergyHandler(w http.ResponseWriter, r *http.Reques
 		if err != nil {
 			http.Error(w, "Unable to remove that allergy", http.StatusBadRequest)
 		}
+		nameArr := []string{allergyName}
+		//Removal of a allergy
+		ntfy := &notification.AllergyEvent{
+			EventType: notification.RemoveAllergy,
+			Message:   nameArr,
+		}
+		ctx.Notifier.Notify(ntfy)
 		w.Header().Add("Content-Type", contentTypeTextUTF8)
 		w.Write([]byte("Allergy has been removed from the user"))
 	}
@@ -419,6 +453,12 @@ func (ctx *Context) SpecificFavRecipeHandler(w http.ResponseWriter, r *http.Requ
 		if err != nil {
 			http.Error(w, "Error adding favorite recipe", http.StatusInternalServerError)
 		}
+		//Recipe events adding recipe to book
+		ntfy := &notification.RecipesEvent{
+			EventType: notification.NewBook,
+			Message:   recipeName,
+		}
+		ctx.Notifier.Notify(ntfy)
 		w.Header().Add("Content-Type", contentTypeTextUTF8)
 		w.Write([]byte("Recipe has been added from the book"))
 	case "DELETE":
@@ -426,6 +466,12 @@ func (ctx *Context) SpecificFavRecipeHandler(w http.ResponseWriter, r *http.Requ
 		if err != nil {
 			http.Error(w, "Unable to remove that recipe", http.StatusBadRequest)
 		}
+		//Recipe events adding recipe to book
+		ntfy := &notification.RecipesEvent{
+			EventType: notification.RemoveBook,
+			Message:   recipeName,
+		}
+		ctx.Notifier.Notify(ntfy)
 		w.Header().Add("Content-Type", contentTypeTextUTF8)
 		w.Write([]byte("Recipe has been removed from the book"))
 	}
@@ -501,6 +547,13 @@ func (ctx *Context) SpecificFriendHandler(w http.ResponseWriter, r *http.Request
 			http.Error(w, "Error adding friend", http.StatusInternalServerError)
 		}
 		frnd, _ := ctx.UserStore.GetByID(friendsList.FriendID)
+
+		//Adding friend
+		ntfy := &notification.UserEvent{
+			EventType: notification.AddFriend,
+			Message:   frnd,
+		}
+		ctx.Notifier.Notify(ntfy)
 		w.Header().Add("Content-Type", contentTypeJSONUTF8)
 		encoder := json.NewEncoder(w)
 		encoder.Encode(frnd)
@@ -509,6 +562,12 @@ func (ctx *Context) SpecificFriendHandler(w http.ResponseWriter, r *http.Request
 		if err != nil {
 			http.Error(w, "Unable to remove that friend", http.StatusBadRequest)
 		}
+		//Deleting friend
+		ntfy := &notification.UserEvent{
+			EventType: notification.RemoveFriend,
+			Message:   friend,
+		}
+		ctx.Notifier.Notify(ntfy)
 		w.Header().Add("Content-Type", contentTypeTextUTF8)
 		w.Write([]byte("friend has been removed from the user"))
 	}
@@ -590,6 +649,12 @@ func (ctx *Context) SpecificFavFriendHandler(w http.ResponseWriter, r *http.Requ
 				http.Error(w, "Error adding favorite friend", http.StatusInternalServerError)
 				return
 			}
+			//Adding favorite friend
+			ntfy := &notification.UserEvent{
+				EventType: notification.AddFavFriend,
+				Message:   friend,
+			}
+			ctx.Notifier.Notify(ntfy)
 			w.Header().Add("Content-Type", contentTypeTextUTF8)
 			w.Write([]byte("friend has been added as favorite"))
 		case "remove":
@@ -598,6 +663,12 @@ func (ctx *Context) SpecificFavFriendHandler(w http.ResponseWriter, r *http.Requ
 				http.Error(w, "Error adding favorite friend", http.StatusInternalServerError)
 				return
 			}
+			//removing favorite friend
+			ntfy := &notification.UserEvent{
+				EventType: notification.RemoveFavFriend,
+				Message:   friend,
+			}
+			ctx.Notifier.Notify(ntfy)
 			w.Header().Add("Content-Type", contentTypeTextUTF8)
 			w.Write([]byte("friend removed from favorites"))
 		default:

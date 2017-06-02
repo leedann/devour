@@ -1,7 +1,8 @@
 import React from "react";
 import Header from "./Header.jsx";
 import Footer from "./Footer.jsx";
-const homeIcons=["shopping_cart", "settings", "info"];
+import {store, handleResponse} from "./shared-state.js";
+const homeIcons=["shopping_cart", "info", "settings"];
 const eventFooter=["Upcoming", "Past"];
 const recipeIcons=["search", "filter"];
 const planFooter=["Day", "Week"];
@@ -9,6 +10,18 @@ const socialIcons=["library_add", "info"];
 const budgetFooter=["Dashboard", "Spending"];
 const base=["", "info"];
 const blank=["",""]
+const myHeader = new Headers();
+myHeader.append('Authorization', localStorage.getItem("Authorization"));
+var auth = localStorage.getItem("Authorization");
+console.log(auth)
+if (auth) {
+    auth = auth.split("Bearer ")[1]
+    var websock = new WebSocket("wss://dvrapi.leedann.me/v1/websocket?auth=" + auth)
+    websock.addEventListener("message", function(wsevent) {
+        var event = JSON.parse(wsevent.data);
+        store.dispatch(handleResponse(event));
+    })
+}
 
 //The layout of the page -- wraps all of the other pages in a header and footer
 export default class Layout extends React.Component {

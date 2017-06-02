@@ -8,6 +8,7 @@ import (
 
 	"github.com/leedann/devour/devoursvr/models/events"
 	"github.com/leedann/devour/devoursvr/models/users"
+	"github.com/leedann/devour/devoursvr/notification"
 	"github.com/leedann/devour/devoursvr/sessions"
 )
 
@@ -20,9 +21,12 @@ type allEvents struct {
 
 //singleEvent is the struct to be encoded to the client containing users, friends, and recipes
 type singleEvent struct {
-	AllUsers []*users.User `json:"allUsers"`
-	Friends  []*users.User `json:"friends"`
-	Recipes  []string      `json:"recipes"`
+	Host         *users.User           `json:"host"`
+	Event        *events.FmtEvent      `json:"event"`
+	AllUsers     []*users.User         `json:"allUsers"`
+	Friends      []*users.User         `json:"friends"`
+	Recipes      []string              `json:"recipes"`
+	Restrictions *events.DietAllergies `json:"restrictions"`
 }
 
 //FormatEvent turns an event into better readability
@@ -142,6 +146,14 @@ func (ctx *Context) EventsHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Error inserting new event", http.StatusInternalServerError)
 			return
 		}
+		//creating a new event
+		ntfy := &notification.EvtEvent{
+			EventType: notification.NewEv,
+			Message:   evt,
+		}
+		//send event to websocket
+		ctx.Notifier.Notify(ntfy)
+
 		w.Header().Add("Content-Type", contentTypeJSONUTF8)
 		encoder := json.NewEncoder(w)
 		encoder.Encode(evt)
@@ -196,14 +208,47 @@ func (ctx *Context) SpecificEventsHandler(w http.ResponseWriter, r *http.Request
 			http.Error(w, "Error getting all recipes in event", http.StatusInternalServerError)
 			return
 		}
+		ad := &events.DietAllergies{}
+		var allergyNames []string
+		var dietNames []string
+		for _, val := range allPeople {
+			allergies, err := ctx.UserStore.GetUserAllergy(val)
+			if err != nil {
+				http.Error(w, "Error fetching allergies", http.StatusInternalServerError)
+				return
+			}
+			for _, lrg := range allergies {
+				allergy, _ := ctx.UserStore.GetAllergyByID(lrg.AllergyTypeID)
+				allergyNames = append(allergyNames, allergy.Name)
+			}
+			diets, err := ctx.UserStore.GetUserDiet(val)
+			if err != nil {
+				http.Error(w, "Error fetching diets", http.StatusInternalServerError)
+				return
+			}
+			for _, dname := range diets {
+				diet, _ := ctx.UserStore.GetDietByID(dname.DietTypeID)
+				dietNames = append(dietNames, diet.Name)
+			}
+		}
+		ad.Allergies = allergyNames
+		ad.Diets = dietNames
 
 		fmtPeople := ctx.hideAllUserInfo(allPeople)
 		fmtFriends := ctx.hideAllUserInfo(friends)
-
+		fmtEvent, _ := ctx.formatEvent(event)
+		host, err := ctx.EventStore.GetHost(event)
+		if err != nil {
+			http.Error(w, "Error getting host of event", http.StatusInternalServerError)
+			return
+		}
 		eventInfo := &singleEvent{
-			AllUsers: fmtPeople,
-			Friends:  fmtFriends,
-			Recipes:  recipes,
+			Host:         host,
+			Event:        fmtEvent,
+			AllUsers:     fmtPeople,
+			Friends:      fmtFriends,
+			Recipes:      recipes,
+			Restrictions: ad,
 		}
 		w.Header().Add("Content-Type", contentTypeJSONUTF8)
 		encoder := json.NewEncoder(w)
@@ -254,6 +299,14 @@ func (ctx *Context) SpecificEventsHandler(w http.ResponseWriter, r *http.Request
 		if err != nil {
 			http.Error(w, "Error getting formatting event", http.StatusInternalServerError)
 		}
+		//creating a new event
+		ntfy := &notification.FmtEvtEvent{
+			EventType: notification.NewEv,
+			Message:   fmtedEvent,
+		}
+		//send event to websocket
+		ctx.Notifier.Notify(ntfy)
+
 		w.Header().Add("Content-Type", contentTypeJSONUTF8)
 		encoder := json.NewEncoder(w)
 		encoder.Encode(fmtedEvent)
@@ -263,13 +316,8 @@ func (ctx *Context) SpecificEventsHandler(w http.ResponseWriter, r *http.Request
 			http.Error(w, "Cannot make changes to an event you are not hosting", http.StatusBadRequest)
 			return
 		}
-		decoder := json.NewDecoder(r.Body)
-		u := &events.Invitation{}
-		if err := decoder.Decode(u); err != nil {
-			http.Error(w, "Invalid JSON", http.StatusBadRequest)
-			return
-		}
-		friend, err := ctx.UserStore.GetByEmail(u.Email)
+		friendEmail := r.Header.Get("Link")
+		friend, err := ctx.UserStore.GetByEmail(friendEmail)
 		if err != nil {
 			http.Error(w, "Error finding that user", http.StatusBadRequest)
 			return
@@ -279,6 +327,14 @@ func (ctx *Context) SpecificEventsHandler(w http.ResponseWriter, r *http.Request
 			http.Error(w, "Unable to add user to event", http.StatusInternalServerError)
 			return
 		}
+
+		//add user to list returns a user
+		ntfy := &notification.UserEvent{
+			EventType: notification.InviteEv,
+			Message:   friend,
+		}
+		//send event to websocket
+		ctx.Notifier.Notify(ntfy)
 		w.Header().Add("Content-Type", contentTypeTextUTF8)
 		w.Write([]byte("User has been invited to the event"))
 	//Removes the user from an event -- only if user has gotten the invite and the user removing friend is host
@@ -287,13 +343,8 @@ func (ctx *Context) SpecificEventsHandler(w http.ResponseWriter, r *http.Request
 			http.Error(w, "Cannot make changes to an event you are not hosting", http.StatusBadRequest)
 			return
 		}
-		decoder := json.NewDecoder(r.Body)
-		u := &events.Invitation{}
-		if err := decoder.Decode(u); err != nil {
-			http.Error(w, "Invalid JSON", http.StatusBadRequest)
-			return
-		}
-		friend, err := ctx.UserStore.GetByEmail(u.Email)
+		friendEmail := r.Header.Get("Link")
+		friend, err := ctx.UserStore.GetByEmail(friendEmail)
 		if err != nil {
 			http.Error(w, "Error finding that user", http.StatusBadRequest)
 			return
@@ -310,6 +361,14 @@ func (ctx *Context) SpecificEventsHandler(w http.ResponseWriter, r *http.Request
 			http.Error(w, "Error removing friend from event", http.StatusInternalServerError)
 			return
 		}
+		//Removing user from event aka rejection
+		ntfy := &notification.UserEvent{
+			EventType: notification.RejectEv,
+			Message:   friend,
+		}
+		//send event to websocket
+		ctx.Notifier.Notify(ntfy)
+
 		w.Header().Add("Content-Type", contentTypeTextUTF8)
 		w.Write([]byte("User has been removed from the event"))
 	//Deletes the event -- only owner
@@ -322,6 +381,12 @@ func (ctx *Context) SpecificEventsHandler(w http.ResponseWriter, r *http.Request
 			http.Error(w, "Error deleting the event", http.StatusInternalServerError)
 			return
 		}
+		//deleting Event
+		ntfy := &notification.EvtEvent{
+			EventType: notification.DeleteEv,
+			Message:   event,
+		}
+		ctx.Notifier.Notify(ntfy)
 		w.Header().Add("Content-Type", contentTypeTextUTF8)
 		w.Write([]byte("Event successfully deleted"))
 	}
@@ -390,16 +455,36 @@ func (ctx *Context) EventAttendanceHandler(w http.ResponseWriter, r *http.Reques
 			http.Error(w, "Invalid: User cannot change status if hosting", http.StatusBadRequest)
 			return
 		}
-
+		fmtEvt, err := ctx.formatEvent(evt)
+		if err != nil {
+			http.Error(w, "Error formatting events", http.StatusInternalServerError)
+			return
+		}
 		//user is invited to the event, check if the update is rejection
 		if attendanceUpdate.AttendanceStatus == "Not Attending" {
 			err = ctx.EventStore.RejectInvite(evt, user)
+			if err != nil {
+				http.Error(w, "Error updating attendance status", http.StatusInternalServerError)
+				return
+			}
+			//Changing the attendance of event -- will have to update pending events
+			ntfy := &notification.FmtEvtEvent{
+				EventType: notification.RejectEv,
+				Message:   fmtEvt,
+			}
+			ctx.Notifier.Notify(ntfy)
 		} else {
 			err = ctx.EventStore.UpdateAttendanceStatus(user, evt, attendanceUpdate.AttendanceStatus)
-		}
-		if err != nil {
-			http.Error(w, "Error updating attendance status", http.StatusInternalServerError)
-			return
+			if err != nil {
+				http.Error(w, "Error updating attendance status", http.StatusInternalServerError)
+				return
+			}
+			//Changing the attendance of event -- will have to update pending events
+			ntfy := &notification.FmtEvtEvent{
+				EventType: notification.UpdateAttendance,
+				Message:   fmtEvt,
+			}
+			ctx.Notifier.Notify(ntfy)
 		}
 		w.Header().Add("Content-Type", contentTypeTextUTF8)
 		w.Write([]byte("Attendance successfully updated"))
@@ -444,6 +529,13 @@ func (ctx *Context) EventRecipesHandler(w http.ResponseWriter, r *http.Request) 
 			http.Error(w, "Error adding recipe to the event", http.StatusInternalServerError)
 			return
 		}
+		//Recipe events adding recipe FROM event
+		ntfy := &notification.RecipesEvent{
+			EventType: notification.AddRecipe,
+			Message:   recipeName.Recipe,
+		}
+		ctx.Notifier.Notify(ntfy)
+
 		w.Header().Add("Content-Type", contentTypeJSONUTF8)
 		encoder := json.NewEncoder(w)
 		encoder.Encode(recipe)
@@ -453,6 +545,13 @@ func (ctx *Context) EventRecipesHandler(w http.ResponseWriter, r *http.Request) 
 			http.Error(w, "Error deleting recipe from event", http.StatusInternalServerError)
 			return
 		}
+		//Recipe events removing recipe FROM event
+		ntfy := &notification.RecipesEvent{
+			EventType: notification.RemoveRecipe,
+			Message:   recipeName.Recipe,
+		}
+		ctx.Notifier.Notify(ntfy)
+
 		w.Header().Add("Content-Type", contentTypeTextUTF8)
 		w.Write([]byte("Recipe successfully removed"))
 	}

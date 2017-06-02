@@ -1,18 +1,40 @@
 import React from "react";
 import moment from "moment";
-import {history} from './app.jsx'
+import {store} from "./shared-state.js";
+import {history} from './app.jsx';
+import LoaderExampleLoader from './loading.jsx';
+import { Button, Popup } from 'semantic-ui-react'
+const myHeader = new Headers();
+myHeader.append('Authorization', localStorage.getItem("Authorization"));
+const baseurl = 'https://dvrapi.leedann.me/v1/';
 
 //the long tiles
 class LongCards extends React.Component {
     constructor(props) {
         super(props)
         this.state={
-            day: moment(this.props.evt.StartTime).format("D"),
-            hosting: this.props.evt.Hosting,
+            day: moment(this.props.evt.startAt).format("D"),
+            hosting: "",
             name: this.props.evt.Name,
-            request: this.props.request? this.props.request : false
+            request: this.props.request? this.props.request : false,
+            event: ""
         }
         this.handleEvntClick = this.handleEvntClick.bind(this)
+    }
+
+    componentDidMount() {
+        var req = {
+            method: 'GET',
+            headers: myHeader,
+        }
+        fetch(baseurl+'events/' + this.props.evt.id, req)
+        .then((resp) => resp.json())
+        .then(data => {
+            this.setState({
+                event: data.event,
+                hosting: data.host
+            })
+        })
     }
 
     //clicking the event tile will send you to the particular event
@@ -20,7 +42,7 @@ class LongCards extends React.Component {
         //state in push goes to this.location.state
         if (evt.target.tagName !== 'I') {
             //will need to render a different event based on referrer
-            history.push("/social/event")
+            history.push("/social/event/" + this.props.evt.id)
         }
     }
 
@@ -38,7 +60,7 @@ class LongCards extends React.Component {
                                 {doubleNum? <text className="circleText" x="35" y="59">{this.state.day}</text> : <text className="circleText" x="43" y="59">{this.state.day}</text>}
                             </svg>
                             <span className="gatheringName">
-                                {this.state.name}
+                                {this.state.event.name}
                             </span>
                         </div>
                     {/*the accept and reject button*/}
@@ -58,7 +80,7 @@ class LongCards extends React.Component {
                                 {doubleNum? <text className="circleText" x="35" y="59">{this.state.day}</text> : <text className="circleText" x="43" y="59">{this.state.day}</text>}
                             </svg>
                             <span className="gatheringName">
-                                {this.state.name}
+                                {this.state.event.name}
                             </span>
                         </div>
                     </span>
@@ -67,6 +89,9 @@ class LongCards extends React.Component {
         }
     }
     render() {
+        if (!this.state.event) {
+            return (<LoaderExampleLoader />);
+        }
         return(
             this.requestCheck()
         );
@@ -78,68 +103,78 @@ class LongCards extends React.Component {
 export class TitleWrap extends React.Component {
     constructor(props) {
         super(props)
-        this.state={
-            titleName: this.props.titleName,
-            arr: this.props.arr,
-            request: this.props.request
+        //not authorized
+        if (!localStorage.getItem("Authorization")) {
+            this.props.history.push('/')
         }
+        this.state= store.getState()
+    }
+    componentDidMount() {
+        this.unsub = store.subscribe(() => this.setState(store.getState()));
+    }
+    componentWillUnmount() {
+        this.unsub();
     }
     //will need to rerender page to show the snackbar (weird)
-    handleRequestClick(event) {
+    handleAccept(event) {
         var target = event.currentTarget;
-        var buttonClass = target.className.split(" ");
-        var targetID = target.parentNode.id;
-        var snackbarContainer = document.getElementById("snackBar");
+        event.preventDefault()
         var data = {
-            message: "",
-            timeout: 1000,
-            actionText: 'Undo'
-        };
-        switch (buttonClass[0]) {
-            case "accept":
-                    target.style.color="#4CAF50";
-                    data.message = "Event accepted!"
-                    console.log(snackbarContainer.MaterialSnackbar)
-                    snackbarContainer.MaterialSnackbar.showSnackbar(data);
-                break;
-            case "reject":
-                    target.style.color="#F50057";
-                    data.message ="Event declined."
-                    snackbarContainer.MaterialSnackbar.showSnackbar(data);
-                break;
-            default:
-                break;
+            "eventid": target.id,
+            "attendanceStatus": "Attending",
         }
-        //temporary remove -- will need to remove from api then 
-        var newArr = this.state.arr;
-        newArr = newArr.filter(obj => {
-            return obj.id !== targetID
-        })
-        this.setState({
-            arr: newArr
-        })
-        //dont forget to do an api call when we get it up!
+        data = JSON.stringify(data);
+        var req = {
+            method: 'PATCH',
+            headers: myHeader,
+            body: data
+        }
+        fetch(baseurl+'attendance', req)
     }
+    handleReject(event) {
+        var target = event.currentTarget;
+        event.preventDefault()
+        var data = {
+            "eventid": target.id,
+            "attendanceStatus": "Not Attending",
+        }
+        data = JSON.stringify(data);
+        var req = {
+            method: 'PATCH',
+            headers: myHeader,
+            body: data
+        }
+        fetch(baseurl+'attendance', req)
+    }
+
 
     render() {
         return (
-                <div className="titleTile">
-                    <div className="titleChildren mdl-grid">
-                        <span className="titleName mdl-cell--12-col mdl-cell--8-col-phone">{this.state.titleName}</span>
-                        <ul className="longCardContainer mld-list mdl-cell mdl-cell--12-col mdl-cell--8-col-phone mdl-grid">
-                            {this.state.arr.map(evt =>
-                                <LongCards key={evt.id} evt={evt} request={this.props.request}>
-                                    {this.props.request? 
-                                        <span id={evt.id} className="reqAnswer mdl-list__item-secondary-action">
-                                            <i className="reject material-icons" onClick={event => this.handleRequestClick(event)}>clear</i>
-                                            <i className="accept material-icons" onClick={event => this.handleRequestClick(event)}>done</i>
-                                        </span>
-                                    : ""}
-                                </LongCards>
-                            )}
-                        </ul>
-                    </div>
-                </div>              
+                <div className="titleChildren mdl-grid">
+                    <span className="titleName mdl-cell--12-col mdl-cell--8-col-phone">{this.props.titleName}</span>
+                    <ul className="longCardContainer mld-list mdl-cell mdl-cell--12-col mdl-cell--8-col-phone mdl-grid">
+                        {this.props.arr.map(evt =>
+                            <LongCards key={evt.id} evt={evt} request={this.props.request}>
+                                {this.props.request? 
+                                    <span id={evt.id} className="reqAnswer mdl-list__item-secondary-action">
+                                    <Popup
+                                        trigger={<Button icon='checkmark' />}
+                                        content={<Button id={evt.id} color='green' onClick={(event) => this.handleAccept(event)} content='Accept' />}
+                                        on='click'
+                                        position='top right'
+                                    />
+                                    <Popup
+                                        trigger={<Button icon='remove'/>}
+                                        content={<Button id={evt.id} color='red' onClick={(event) => this.handleReject(event)} content='Reject' />}
+                                        on='click'
+                                        position='top right'
+                                    />
+                                    </span>
+                                : ""}
+                            </LongCards>
+                        )}
+                    </ul>
+                </div>            
             );
     }
 }
@@ -148,17 +183,21 @@ export class TitleWrap extends React.Component {
 //this is the events page list
 export default class GatheringList extends React.Component {
     constructor(props) {
-        super(props)
-        this.state={
-            events: this.props.events,
+        super(props);
+        //not authorized
+        if (!localStorage.getItem("Authorization")) {
+            this.props.history.push('/')
         }
+        this.state= store.getState()
     }
 
 
     //compares the dates in the array of events... orders them by earliest to latest
     compareDate(rec1, rec2) {
-        var date1 = new Date(rec1.StartTime);
-        var date2 = new Date(rec2.StartTime);
+        var first = rec1.startAt.substring(0, 10)
+        var second = rec2.startAt.substring(0, 10)
+        var date1 = new Date(first);
+        var date2 = new Date(second);
         if (date1 > date2) {
             return 1;
         }
@@ -168,15 +207,24 @@ export default class GatheringList extends React.Component {
         return 0;
     }
 
-    //re-orders the array to make sure that they are sorted correctly
-    //TODO: work with this and actual data from an ajax call
     componentDidMount() {
-        var allMonths = this.state.events;
+        this.unsub = store.subscribe(() => this.setState(store.getState()));
+    }
+    componentWillUnmount() {
+        this.unsub();
+    }
+
+    render() {
+        if (!this.state.upcomingEvents) {
+            return <h2 className="mdl-layout__header mdl-layout__header-row mdl-layout__header--transparent textAccent ">no events to show!</h2>
+        }
+        var allMonths = this.state.upcomingEvents;
         allMonths.sort(this.compareDate)
         var eventObj={}
         //gets all the months of the events and orders them
         for (var i = 0; i < allMonths.length; i++) {
-            var month = moment(allMonths[i].StartTime).format("MMMM")
+            var fix = allMonths[i].startAt.substring(0, allMonths[i].startAt.length - 1)
+            var month = moment(fix).format("MMMM")
             //if month isnt in the obj
             if (!eventObj[month]) {
                 eventObj[month]=[]
@@ -185,18 +233,10 @@ export default class GatheringList extends React.Component {
                 eventObj[month].push(allMonths[i]);
             }
         }
-        this.setState({
-            events: eventObj
-        })
-    }
-
-
-    render() {
-        var eventObj = this.state.events
         return (
             <div className="md-grid">
                 {
-                    Object.keys(this.state.events).map(function(keyName, keyIndex) {
+                    Object.keys(eventObj).map(function(keyName, keyIndex) {
                         if (moment(keyName, "MMMM").isValid()) {
                             return <TitleWrap key={keyName} arr={eventObj[keyName]} titleName={keyName} />
                         }
