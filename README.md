@@ -21,9 +21,9 @@ Current Status
 =======
 
 - Users are able to create an [account](https://dvr.leedann.me/register) and [login](https://dvr.leedann.me/)
-  - be sure to [pick](https://dvr.leedann.me/survey) your diets and allergies after registration!
-- Creation of an [event](https://dvr.leedann.me/create)
-- Able to find your [recipes](https://dvr.leedann.me/recipes)
+  - be sure to pick your diets and allergies after registration!
+- Creation of an event
+- Able to find your recipes
 - NOT able to add friends and friends to event at the moment
 - NOT able to add budget, check your recipebook, plan, or friends
 
