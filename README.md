@@ -38,21 +38,16 @@ Technology
 =======
 
 <img src="http://react-etc.net/files/2016-07/logo-578x270.png" align="left" width="200"/> <br />
-Declarative, and Component-based makes creating ui easy! It is also what I am familiar with.
-
-
-
-
-
+Declarative, and Component-based makes creating ui easy! It is also what I am familiar with
 
 <img src="http://octivi.com/wp-content/uploads/2014/05/redis.png" align="left" width="200"/><br />
-User store, it helps keep the important information separated from the database. Simple and easy to use.
+User store, it helps keep the important information separated from the database. Simple and easy to use
 
 <img src="https://softwareengineeringdaily.com/wp-content/uploads/2016/10/PostgreSQL.png" align="left" width="200"/><br />
-Open-Sourced database. Helps making many-to-many relationships easy to deal with (we have many).
+Open-Sourced database. Helps making many-to-many relationships easy to deal with (we have many)
 
 <img src="https://msopentech.com/wp-content/uploads/dockericon.png" align="left"  width="200"/><br />
-"Escapes the app dependency" matrix allows us to run our client and server without having to worry about dependencies, containers are also secure.
+"Escapes the app dependency" matrix allows us to run our client and server without having to worry about dependencies, containers are also secure
 
 <img src="https://dwa5x7aod66zk.cloudfront.net/assets/pack/logo-digitalocean-3d328c1d6619d314d47aab1259c1235b1339c343e12df62a688076bf6ceac866.jpg" align="left" width="200"/> <br />
 For our cloud hosting needs, it has awesome documentation and was easy to learn (I also had a coupon for the service)
