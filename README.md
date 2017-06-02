@@ -61,4 +61,9 @@ Information Needs
 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Yummly_logo.png/1200px-Yummly_logo.png" align="left" width="100"/><br /> 
 For our recipe information needs. They provide a lot of details when it comes to food recipes, most of which we used in Devour.
 
+Contact
+=======
+
+For any questions you can contact: leedann@uw.edu
+
 
